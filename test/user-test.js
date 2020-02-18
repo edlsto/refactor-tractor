@@ -83,6 +83,17 @@ describe('User', () => {
     expect(user1.findRecipeToCook('Loaded Chocolate Chip Pudding Cookie Cups')).to.eql([recipeData[0]]);
   });
 
+  it('Should be able to search recipesToCook by ingredient name', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('egg')).to.eql([recipeData[0]]);
+  });
+
+  it('Should not filter recipesToCook by ingredient name if that ingredient does not exist', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('cheese')).to.eql([]);
+  });
   // it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
   //   console.log(recipeData[0].ingredients);
   //   let recipeIngredients = recipeData[0].ingredients;
