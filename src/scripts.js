@@ -1,9 +1,37 @@
 import './css/base.scss';
 import './css/styles.scss';
+import $ from 'jquery';
 
-import recipeData from './data/recipes';
-import ingredientData from './data/ingredients';
-import users from './data/users';
+let ingredientData
+let ingredientsData
+let users
+let ingredientsArchive = [];
+let cookbook;
+let cookbookArchive = [];
+let user, pantry;
+
+function getData(type) {
+	const root = 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/';
+	const url = `${root}${type}`;
+	const promise = fetch(url)
+	                .then(data => data.json());
+	return promise;
+}
+// to do; refactor this so it isn't living in global scope
+let recipes = getData('recipes/recipeData');
+let ingredients = getData('ingredients/ingredientsData');
+let userss = getData('users/wcUsersData');
+
+Promise.all([recipes, ingredients, userss]).then(promises => {
+  recipes = promises[0];
+  ingredients = promises[1];
+  userss = promises[2];
+}).then(() => {
+  users = userss.wcUsersData
+  cookbook = new Cookbook(recipes.recipeData);
+  onStartup(cookbook, cookbook.recipes, ingredients.ingredientsData, users)
+  greetUser();
+});
 
 import Pantry from './pantry';
 import Recipe from './recipe';
@@ -13,24 +41,32 @@ import Cookbook from './cookbook';
 let favButton = document.querySelector('.view-favorites');
 let homeButton = document.querySelector('.home')
 let cardArea = document.querySelector('.all-cards');
-let cookbook = new Cookbook(recipeData);
-let user, pantry;
+let headerSearch = $('#search-input')
 
-window.onload = onStartup();
-
+headerSearch.on('keyup', searchByName)
 homeButton.addEventListener('click', cardButtonConditionals);
 favButton.addEventListener('click', viewFavorites);
 cardArea.addEventListener('click', cardButtonConditionals);
 
-function onStartup() {
+function onStartup(cookbook, recipeData, ingredientData, users, event) {
   let userId = (Math.floor(Math.random() * 49) + 1)
   let newUser = users.find(user => {
     return user.id === Number(userId);
   });
   user = new User(userId, newUser.name, newUser.pantry)
   pantry = new Pantry(newUser.pantry)
-  populateCards(cookbook.recipes);
+  cookbook.recipes = cookbook.recipes.map((recipe) => {
+    return new Recipe(recipe)
+  })
+  populateCards(recipeData);
   greetUser();
+  ingredientsArchive = ingredientData;
+  cookbookArchive = cookbook;
+}
+
+function searchByName(cookbook, searchText) {
+  let results = cookbookArchive.findRecipe(searchText)
+  populateCards(results)
 }
 
 function viewFavorites() {
@@ -80,6 +116,7 @@ function favoriteCard(event) {
   if (!event.target.classList.contains('favorite-active')) {
     event.target.classList.add('favorite-active');
     favButton.innerHTML = 'View Favorites';
+    console.warn(user.favoriteRecipes)
     user.addToFavorites(specificRecipe);
   } else if (event.target.classList.contains('favorite-active')) {
     event.target.classList.remove('favorite-active');
@@ -105,7 +142,7 @@ function displayDirections(event) {
       return recipe;
     }
   })
-  let recipeObject = new Recipe(newRecipeInfo, ingredientsData);
+  let recipeObject = new Recipe(newRecipeInfo, ingredientsArchive);
   let cost = recipeObject.calculateCost()
   let costInDollars = (cost / 100).toFixed(2)
   cardArea.classList.add('all');
