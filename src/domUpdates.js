@@ -1,14 +1,16 @@
+import $ from 'jquery';
 import './css/base.scss';
 import './css/styles.scss';
-import $ from 'jquery';
-
-let ingredientData
-let ingredientsData
-let users
-let ingredientsArchive = [];
-let cookbook;
-let cookbookArchive = [];
-let user, pantry;
+import Recipe from './recipe';
+import Pantry from './pantry';
+import User from './user';
+import Cookbook from './cookbook';
+import recipeData from './data/recipes';
+import ingredientData from './data/ingredients';
+import users from './data/users';
+// wcUsersData: https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData
+// ingredientsData: https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData
+// recipesData: https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/recipes/recipeData
 
 function getData(type) {
 	const root = 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/';
@@ -17,56 +19,49 @@ function getData(type) {
 	                .then(data => data.json());
 	return promise;
 }
-// to do; refactor this so it isn't living in global scope
+
 let recipes = getData('recipes/recipeData');
 let ingredients = getData('ingredients/ingredientsData');
-let userss = getData('users/wcUsersData');
+let users = getData('users/wcUsersData');
 
-Promise.all([recipes, ingredients, userss]).then(promises => {
+
+Promise.all([recipes, ingredients, users]).then(promises => {
   recipes = promises[0];
   ingredients = promises[1];
-  userss = promises[2];
+  users = promises[2];
 }).then(() => {
-  users = userss.wcUsersData
-  cookbook = new Cookbook(recipes.recipeData);
-  onStartup(cookbook, cookbook.recipes, ingredients.ingredientsData, users)
-  greetUser();
+  let cookbook = new Cookbook(cookbook.recipes);
 });
 
-import Pantry from './pantry';
-import Recipe from './recipe';
-import User from './user';
-import Cookbook from './cookbook';
+function anon() {
+  console.log(recipes)
+  console.log(ingredients)
+  console.log(users)
+}
+
+anon()
 
 let favButton = document.querySelector('.view-favorites');
 let homeButton = document.querySelector('.home')
 let cardArea = document.querySelector('.all-cards');
-let headerSearch = $('#search-input')
+// let cookbook = new Cookbook(recipeData);
+let user, pantry;
 
-headerSearch.on('keyup', searchByName)
+window.onload = onStartup();
+
 homeButton.addEventListener('click', cardButtonConditionals);
 favButton.addEventListener('click', viewFavorites);
 cardArea.addEventListener('click', cardButtonConditionals);
 
-function onStartup(cookbook, recipeData, ingredientData, users, event) {
+function onStartup() {
   let userId = (Math.floor(Math.random() * 49) + 1)
   let newUser = users.find(user => {
     return user.id === Number(userId);
   });
   user = new User(userId, newUser.name, newUser.pantry)
   pantry = new Pantry(newUser.pantry)
-  cookbook.recipes = cookbook.recipes.map((recipe) => {
-    return new Recipe(recipe)
-  })
-  populateCards(recipeData);
+  populateCards(cookbook.recipes);
   greetUser();
-  ingredientsArchive = ingredientData;
-  cookbookArchive = cookbook;
-}
-
-function searchByName(cookbook, searchText) {
-  let results = cookbookArchive.findRecipe(searchText)
-  populateCards(results)
 }
 
 function viewFavorites() {
@@ -116,7 +111,6 @@ function favoriteCard(event) {
   if (!event.target.classList.contains('favorite-active')) {
     event.target.classList.add('favorite-active');
     favButton.innerHTML = 'View Favorites';
-    console.warn(user.favoriteRecipes)
     user.addToFavorites(specificRecipe);
   } else if (event.target.classList.contains('favorite-active')) {
     event.target.classList.remove('favorite-active');
@@ -142,7 +136,7 @@ function displayDirections(event) {
       return recipe;
     }
   })
-  let recipeObject = new Recipe(newRecipeInfo, ingredientsArchive);
+  let recipeObject = new Recipe(newRecipeInfo, ingredientsData);
   let cost = recipeObject.calculateCost()
   let costInDollars = (cost / 100).toFixed(2)
   cardArea.classList.add('all');
