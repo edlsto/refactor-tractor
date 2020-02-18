@@ -65,7 +65,11 @@ describe('User', () => {
     expect(user1.recipesToCook.includes(recipeData[0])).to.eql(false);
   });
 
-  it()
+  it('Should be able to search recipesToCook by name', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('Loaded Chocolate Chip Pudding Cookie Cups')).to.eql([recipeData[0]]);
+  });
 
   // it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
   //   console.log(recipeData[0].ingredients);
