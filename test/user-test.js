@@ -43,10 +43,22 @@ describe('User', () => {
     expect(user1.filterFavorites('antipasti')).to.eql([recipeData[0]]);
   });
 
+  it('Should be able to filter through favoriteRecipes by tag and not return a recipe if none contain that tag', () => {
+    user1.addToFavorites(recipeData[0]);
+    user1.addToFavorites(recipeData[1]);
+    expect(user1.filterFavorites('breakfast')).to.eql([]);
+  });
+
   it('Should be able to search favoriteRecipes by name or ingredient', () => {
     user1.addToFavorites(recipeData[0]);
     user1.addToFavorites(recipeData[1]);
     expect(user1.findFavorites('egg')).to.eql([recipeData[0]]);
+  });
+
+  it('Should be able to filter through favoriteRecipes by ingredient and not return a recipe if none contain that ingredient', () => {
+    user1.addToFavorites(recipeData[0]);
+    user1.addToFavorites(recipeData[1]);
+    expect(user1.filterFavorites('cheese')).to.eql([]);
   });
 
   it('Should be able to add recipes to a list of recipes to cook', () => {
@@ -65,7 +77,7 @@ describe('User', () => {
     expect(user1.recipesToCook.includes(recipeData[0])).to.eql(false);
   });
 
-  it('Should be able to filter recipes to cook by type ', () => {
+  it('Should be able to filter recipes to cook by type', () => {
     user1.addRecipesToCook(recipeData[0]);
     user1.addRecipesToCook(recipeData[1]);
     expect(user1.filterRecipesToCook('antipasti')).to.eql([recipeData[0]]);
