@@ -65,6 +65,18 @@ describe('User', () => {
     expect(user1.recipesToCook.includes(recipeData[0])).to.eql(false);
   });
 
+  it('Should be able to filter recipes to cook by type ', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.filterRecipesToCook('antipasti')).to.eql([recipeData[0]]);
+  });
+
+  it('Should not filter recipes if the type provided is not present', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.filterRecipesToCook('dessert')).to.eql([]);
+  });
+
   it('Should be able to search recipesToCook by name', () => {
     user1.addRecipesToCook(recipeData[0]);
     user1.addRecipesToCook(recipeData[1]);
