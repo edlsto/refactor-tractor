@@ -54,11 +54,18 @@ describe('User', () => {
     expect(user1.recipesToCook.includes(recipeData[0])).to.eql(true);
   });
 
+  it('Should only add the recipe a user selects to a list of recipes to cook', () => {
+    user1.addRecipesToCook(recipeData[0])
+    expect(user1.recipesToCook.includes(recipeData[1])).to.eql(false);
+  });
+
   it('Should be able to remove a recipe from the list of recipes to cook', () => {
     user1.addRecipesToCook(recipeData[0])
     user1.removeFromRecipesToCook(recipeData[0])
     expect(user1.recipesToCook.includes(recipeData[0])).to.eql(false);
   });
+
+  it()
 
   // it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
   //   console.log(recipeData[0].ingredients);
