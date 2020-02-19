@@ -93,5 +93,11 @@ describe('Pantry (using full data)', function() {
     expect(pantry.getCostOfItemsNeeded(recipe2)).to.equal(24738.5)
   })
 
+  it('should be able to add items to pantry', function() {
+    let recipe2 = new Recipe(recipeData[2], ingredientsData)
+    expect(pantry.contents[0].amount).to.equal(5)
+    pantry.addToPantry(6150, 3)
+    expect(pantry.contents[0].amount).to.equal(8)
 
+  })
 })
