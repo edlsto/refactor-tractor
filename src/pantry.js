@@ -3,20 +3,15 @@ class Pantry {
     this.contents = userIngredients;
   }
 
+  findInPantry(recipeItem) {
+    return this.contents.find(pantryItem => {
+      return pantryItem.ingredient === recipeItem
+    });
+  }
+
   canCookMeal(recipe) {
-    // console.log(this.contents)
-    // console.log(recipe.ingredients)
     for (let i = 0; i < recipe.ingredients.length; i++) {
-      let pantryItem = this.contents.find(pantryItem => {
-        return pantryItem.ingredient === recipe.ingredients[i].id
-      });
-      // if (!pantryItem) {
-      //   console.log('in pantry: no')
-      // } else {
-      //   console.log('in pantry ' + pantryItem.amount)
-      // }
-      // console.log('recipe needs: ' + recipe.ingredients[i].quantity.amount)
-      // If we don't have enough of the ingredient
+      let pantryItem = this.findInPantry(recipe.ingredients[i].id)
       if (!pantryItem || recipe.ingredients[i].quantity.amount > pantryItem.amount) {
         return false;
       }
@@ -37,33 +32,53 @@ class Pantry {
           amount: pantryItem.amount
         }
       })
-    } else {
+    }
+  }
+  
+  getItemsNeeded(recipe) {
+    if (!this.canCookMeal(recipe)) {
       let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
-        let pantryItem = this.contents.find(pantryItem => {
-          return pantryItem.ingredient === recipeIngredient.id
-        });
+        let pantryItem = this.findInPantry(recipeIngredient.id)
         return !pantryItem || recipeIngredient.quantity.amount > pantryItem.amount
       })
       itemsNeeded = itemsNeeded.map(item => {
-        let pantryItem = this.contents.find(pantryItem => {
-          return pantryItem.ingredient === item.id
-        });
+        let pantryItem = this.findInPantry(item.id)
         if (!pantryItem) {
           return {
             name: item.name,
-            quantityNeeded: item.quantity.amount
+            quantityNeeded: item.quantity.amount,
+            id: item.id,
+            cost: this.getCost(item, item.quantity.amount, recipe)
           }
         } else {
-        return {
-          name: item.name,
-          quantityNeeded: item.quantity.amount - pantryItem.amount
+          return {
+            name: item.name,
+            quantityNeeded: item.quantity.amount - pantryItem.amount,
+            id: item.id,
+            cost: this.getCost(item, item.quantity.amount, recipe)
+          }
         }
-      }
       })
       return itemsNeeded
-      };
     }
   }
+
+  getCost(item, amount, recipe) {
+    return recipe.ingredientsData.find(ingredient => {
+      return ingredient.id === item.id
+    }).estimatedCostInCents * amount
+  }
+
+  getCostOfItemsNeeded(recipe) {
+    let itemsNeeded = this.getItemsNeeded(recipe);
+    return itemsNeeded.reduce((totalCost, item) => {
+      totalCost += item.cost
+      return totalCost;
+    }, 0)
+  }
+
+}
+
 
 
 
