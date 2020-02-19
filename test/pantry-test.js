@@ -57,10 +57,17 @@ describe('Pantry with full data', function() {
   })
 
   it('should be able to subtract ingredients from pantry once a meal is cooked', function() {
-    // console.log(pantry)
-
+     expect(pantry.contents[33].amount).to.equal(4)
     const recipe = new Recipe(recipeData[0], ingredientsData)
     pantry.cookMeal(recipe)
+    expect(pantry.contents[33].amount).to.equal(2.5)
+
+  })
+
+  it('should be able to say what ingredients are needed if not enough in pantry', function() {
+    let recipe2 = new Recipe(recipeData[2], ingredientsData)
+    console.log(pantry.cookMeal(recipe2))
+
   })
 
 })
