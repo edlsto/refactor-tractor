@@ -3,10 +3,24 @@ class Pantry {
     this.contents = userIngredients;
   }
 
-  findInPantry(recipeItem) {
+  findInPantry(recipeItemId) {
     return this.contents.find(pantryItem => {
-      return pantryItem.ingredient === recipeItem
+      return pantryItem.ingredient === recipeItemId
     });
+  }
+
+  addToPantry(id, amountToAdd) {
+    let item = this.findInPantry(id)
+    if (item) {
+      this.contents.find(pantryItem => {
+        return pantryItem.ingredient === id
+      }).amount += amountToAdd;
+    } else {
+      this.contents.push({
+        'ingredient': id,
+        'amount': amountToAdd
+      })
+    }
   }
 
   canCookMeal(recipe) {
@@ -34,7 +48,7 @@ class Pantry {
       })
     }
   }
-  
+
   getItemsNeeded(recipe) {
     if (!this.canCookMeal(recipe)) {
       let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
