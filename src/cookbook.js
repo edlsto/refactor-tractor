@@ -3,12 +3,13 @@ class Cookbook {
     this.recipes = data;
   }
 
-  findRecipe(searchText) {
+  findRecipeByName(searchText) {
     return this.recipes.filter(recipe => {
-      return recipe.ingredients.find(ingredient => {
-        return (ingredient.name.includes(searchText)) ||
-        (recipe.name.includes(searchText))
-      });
+      let recipeName = recipe.name.split(' ');
+      recipeName = recipeName.map((word) => {
+        return word.slice(0, searchText.length).toLowerCase()
+      })
+        return recipeName.includes(searchText.toLowerCase())
     })
   }
 }
