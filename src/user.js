@@ -4,7 +4,7 @@ class User {
     this.name = name;
     this.pantry = pantry;
     this.favoriteRecipes = [];
-
+    this.recipesToCook = [];
   }
 
   addToFavorites(recipe) {
@@ -26,6 +26,37 @@ class User {
 
   findFavorites(strgToSrch) {
     return this.favoriteRecipes.filter(recipe => {
+      return recipe.name.includes(strgToSrch)
+      || recipe.ingredients.find(ingredient => {
+        return ingredient.name.includes(strgToSrch)
+      });
+    });
+  }
+
+  // checkPantry(recipeIngredients) {
+  //   recipeIngredients.forEach((ingredient) => {
+  //     if(this.pantry.includes(ingredient.id && ingredient.quantity.amount))
+  //   });
+  // }
+  addRecipesToCook(recipe) {
+    if (!this.recipesToCook.includes(recipe)) {
+      this.recipesToCook.push(recipe)
+    };
+  }
+
+  removeFromRecipesToCook(recipe) {
+    const i = this.recipesToCook.indexOf(recipe);
+    this.recipesToCook.splice(i, 1)
+  }
+
+  filterRecipesToCook(tag) {
+    return this.recipesToCook.filter(recipe => {
+      return recipe.tags.includes(tag);
+    });
+  }
+
+  findRecipeToCook(strgToSrch) {
+    return this.recipesToCook.filter(recipe => {
       return recipe.name.includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
         return ingredient.name.includes(strgToSrch)

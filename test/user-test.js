@@ -43,17 +43,76 @@ describe('User', () => {
     expect(user1.filterFavorites('antipasti')).to.eql([recipeData[0]]);
   });
 
+  it('Should be able to filter through favoriteRecipes by tag and not return a recipe if none contain that tag', () => {
+    user1.addToFavorites(recipeData[0]);
+    user1.addToFavorites(recipeData[1]);
+    expect(user1.filterFavorites('breakfast')).to.eql([]);
+  });
+
   it('Should be able to search favoriteRecipes by name or ingredient', () => {
     user1.addToFavorites(recipeData[0]);
     user1.addToFavorites(recipeData[1]);
     expect(user1.findFavorites('egg')).to.eql([recipeData[0]]);
   });
 
-  it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
-    expect(user1.checkPantry(recipeIngredients)).to.eql('You have the ingredients!');
+  it('Should be able to filter through favoriteRecipes by ingredient and not return a recipe if none contain that ingredient', () => {
+    user1.addToFavorites(recipeData[0]);
+    user1.addToFavorites(recipeData[1]);
+    expect(user1.filterFavorites('cheese')).to.eql([]);
   });
 
-  it('Should inform User if they lack required ingredients for a given recipe', () => {
-    expect(user1.checkPantry(recipeIngredients)).to.eql(missingIngredientsWithPrice);
+  it('Should be able to add recipes to a list of recipes to cook', () => {
+    user1.addRecipesToCook(recipeData[0])
+    expect(user1.recipesToCook.includes(recipeData[0])).to.eql(true);
   });
+
+  it('Should only add the recipe a user selects to a list of recipes to cook', () => {
+    user1.addRecipesToCook(recipeData[0])
+    expect(user1.recipesToCook.includes(recipeData[1])).to.eql(false);
+  });
+
+  it('Should be able to remove a recipe from the list of recipes to cook', () => {
+    user1.addRecipesToCook(recipeData[0])
+    user1.removeFromRecipesToCook(recipeData[0])
+    expect(user1.recipesToCook.includes(recipeData[0])).to.eql(false);
+  });
+
+  it('Should be able to filter recipes to cook by type', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.filterRecipesToCook('antipasti')).to.eql([recipeData[0]]);
+  });
+
+  it('Should not filter recipes if the type provided is not present', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.filterRecipesToCook('dessert')).to.eql([]);
+  });
+
+  it('Should be able to search recipesToCook by name', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('Loaded Chocolate Chip Pudding Cookie Cups')).to.eql([recipeData[0]]);
+  });
+
+  it('Should be able to search recipesToCook by ingredient name', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('egg')).to.eql([recipeData[0]]);
+  });
+
+  it('Should not filter recipesToCook by ingredient name if that ingredient does not exist', () => {
+    user1.addRecipesToCook(recipeData[0]);
+    user1.addRecipesToCook(recipeData[1]);
+    expect(user1.findRecipeToCook('cheese')).to.eql([]);
+  });
+  // it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
+  //   console.log(recipeData[0].ingredients);
+  //   let recipeIngredients = recipeData[0].ingredients;
+  //   expect(user1.checkPantry(recipeIngredients)).to.eql('You have the ingredients!');
+  // });
+  //
+  // it('Should inform User if they lack required ingredients for a given recipe', () => {
+  //   expect(user1.checkPantry(recipeIngredients)).to.eql(missingIngredientsWithPrice);
+  // });
 });
