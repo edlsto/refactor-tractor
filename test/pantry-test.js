@@ -10,7 +10,7 @@ import recipeData from '../src/data/recipes.js'
 import Recipe from '../src/recipe.js'
 let user, pantry;
 
-describe('Pantry', function() {
+describe('Pantry (using sample data)', function() {
   beforeEach(function() {
     user = new User(sampleData[0].id, sampleData[0].name, sampleData[0].pantry);
     pantry = new Pantry(user.pantry)
@@ -33,14 +33,9 @@ describe('Pantry', function() {
       { ingredient: 1082047, amount: 5 }
     ]);
   });
+})
 
-
-
-  })
-
-
-
-describe('Pantry with full data', function() {
+describe('Pantry (using full data)', function() {
   beforeEach(function() {
     user = new User(data[1].id, data[1].name, data[1].pantry);
     pantry = new Pantry(user.pantry)
@@ -66,8 +61,37 @@ describe('Pantry with full data', function() {
 
   it('should be able to say what ingredients are needed if not enough in pantry', function() {
     let recipe2 = new Recipe(recipeData[2], ingredientsData)
-    console.log(pantry.cookMeal(recipe2))
-
+    expect(pantry.getItemsNeeded(recipe2)).to.deep.equal(
+      [
+        { name: 'black pepper', quantityNeeded: 3, id: 1002030, cost: 1764 },
+        { name: 'brown sugar', quantityNeeded: 3.5, id: 19334, cost: 4472 },
+        { name: 'canola oil', quantityNeeded: 1, id: 4582, cost: 3228 },
+        { name: 'chicken wings', quantityNeeded: 1, id: 5100, cost: 593 },
+        { name: 'chili powder', quantityNeeded: 3, id: 2009, cost: 1996 },
+        { name: 'garlic powder', quantityNeeded: 4, id: 1022020, cost: 1376 },
+        { name: 'hot sauce', quantityNeeded: 8, id: 6168, cost: 6872 },
+        { name: 'mango', quantityNeeded: 0.5, id: 9176, cost: 212.5 },
+        { name: 'onion powder', quantityNeeded: 4, id: 2026, cost: 2388 },
+        {
+          name: 'seasoning salt',
+          quantityNeeded: 1.5,
+          id: 1042047,
+          cost: 501
+        },
+        {
+          name: 'seasoning salt',
+          quantityNeeded: 4,
+          id: 1042047,
+          cost: 1336
+        }
+      ]
+    )
   })
+
+  it('should be able to calculate how much it will cost to buy the necessary ingredients, based on what’s in the pantry', function() {
+    let recipe2 = new Recipe(recipeData[2], ingredientsData)
+    expect(pantry.getCostOfItemsNeeded(recipe2)).to.equal(24738.5)
+  })
+
 
 })
