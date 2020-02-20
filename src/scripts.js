@@ -1,6 +1,11 @@
 import './css/base.scss';
-import './css/styles.scss';
+// import './css/styles.scss';
 import $ from 'jquery';
+
+import Pantry from './pantry';
+import Recipe from './recipe';
+import User from './user';
+import Cookbook from './cookbook';
 
 let ingredientData
 let ingredientsData
@@ -10,6 +15,14 @@ let cookbook;
 let cookbookArchive = [];
 let user, pantry;
 
+function getResolvedData() {
+  return fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/recipes/recipeData')
+  .then(response => response.json())
+  .then(data => console.log(data))
+}
+
+const myData = getResolvedData();
+console.log(myData)
 function getData(type) {
 	const root = 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/';
 	const url = `${root}${type}`;
@@ -23,6 +36,7 @@ let ingredients = getData('ingredients/ingredientsData');
 let userss = getData('users/wcUsersData');
 
 Promise.all([recipes, ingredients, userss]).then(promises => {
+  console.log(promises[0], 'promiseAtZero')
   recipes = promises[0];
   ingredients = promises[1];
   userss = promises[2];
@@ -30,20 +44,18 @@ Promise.all([recipes, ingredients, userss]).then(promises => {
   users = userss.wcUsersData
   cookbook = new Cookbook(recipes.recipeData);
   onStartup(cookbook, cookbook.recipes, ingredients.ingredientsData, users)
-  greetUser();
-});
+  // greetUser();
+}).catch(error => console.log(error.message));
 
-import Pantry from './pantry';
-import Recipe from './recipe';
-import User from './user';
-import Cookbook from './cookbook';
+
 
 let favButton = document.querySelector('.view-favorites');
 let homeButton = document.querySelector('.home')
 let cardArea = document.querySelector('.all-cards');
-let headerSearch = $('#search-input')
+let headerSearch = document.getElementById('search-input');
+let searchText = headerSearch.value;
 
-headerSearch.on('keyup', searchByName)
+headerSearch.addEventListener('keyup', (e) =>  searchByName(e, cookbook))
 homeButton.addEventListener('click', cardButtonConditionals);
 favButton.addEventListener('click', viewFavorites);
 cardArea.addEventListener('click', cardButtonConditionals);
@@ -62,11 +74,20 @@ function onStartup(cookbook, recipeData, ingredientData, users, event) {
   greetUser();
   ingredientsArchive = ingredientData;
   cookbookArchive = cookbook;
+  console.log(cookbook, 'cookbookinsideonstart')
+  searchByName(e, cookbook)
+
 }
 
-function searchByName(cookbook, searchText) {
-  let results = cookbookArchive.findRecipe(searchText)
-  populateCards(results)
+
+
+function searchByName(e, cookbook) {
+  console.log(e, cookbook, 'hello')
+  let results = cookbook.findRecipeByName(headerSearch.value)
+  if(results !== undefined) {
+    populateCards(results)
+  }
+
 }
 
 function viewFavorites() {
@@ -143,6 +164,7 @@ function displayDirections(event) {
     }
   })
   let recipeObject = new Recipe(newRecipeInfo, ingredientsArchive);
+  console.log(recipeObject)
   let cost = recipeObject.calculateCost()
   let costInDollars = (cost / 100).toFixed(2)
   cardArea.classList.add('all');
@@ -159,8 +181,9 @@ function displayDirections(event) {
   recipeObject.ingredients.forEach(ingredient => {
     ingredientsSpan.insertAdjacentHTML('afterbegin', `<ul><li>
     ${ingredient.quantity.amount.toFixed(2)} ${ingredient.quantity.unit}
-    ${ingredient.name}</li></ul>
-    `)
+    ${ingredientsArchive.find(item => {
+      return item.id === ingredient.id
+    }).name}</li></ul>`)
   })
   recipeObject.instructions.forEach(instruction => {
     instructionsSpan.insertAdjacentHTML('beforebegin', `<li>
