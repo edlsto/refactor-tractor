@@ -29,10 +29,10 @@ body {
   border-right: 1px solid #000;
   font-size: 130%;
   margin: 1%;
+  // margin-left: 20%;
 }
 
 h1 {
-  border-right: 2px solid #000;
   font-size: 255%;
   margin-top: 0;
   margin-bottom: 0;
@@ -42,10 +42,10 @@ h1 {
 }
 
 .user-info {
-  font-size: 180%;
-  margin: auto;
+  font-size: 150%;
+  // margin: auto;
   text-align: center;
-  width: 40%
+  // width: 40%
 }
 
 .search-bar {
@@ -118,12 +118,14 @@ h1 {
 }
 
 .user-profile {
+  text-align: center;
   background-color: #D7F2FE;
   border: 2px solid black;
   grid-area: aside;
   grid-template-columns: repeat(1, 1fr);
   margin-left: 5%;
   margin-top: 10%;
+  // padding-left: 5%;
 }
 
 .all-cards {
