@@ -10,11 +10,11 @@
   <body>
     <header class='main-header'>
       <h1>What's Cookin'</h1>
-      <p class='user-info'>Welcome, <span class='user-name'>User</span>.</p>
+      <!-- <p class='user-info'>Welcome, <span class='user-name'>User</span>.</p> -->
       <label for='home-button' class='hidden'>Homepage button</label>
       <button id='home-button' class='home navButton'>Home</button>
       <label for='view-favorites-button' class='hidden'>View favorites</label>
-      <button id='view-favorites-button' class=' view-favorites navButton'>View Favorites</button>
+      <!-- <button id='view-favorites-button' class=' view-favorites navButton'>View Favorites</button> -->
       <form class='search-bar'>
         <label for='search-button' class='hidden'>Click here to search here</label>
         <button id='search-button' class='search-button'>
@@ -25,8 +25,11 @@
       </form>
     </header>
     <main>
-      <section class="user-profile">
-      </section>
+      <aside class="user-profile">
+        <p class='user-info'>Welcome, <span class='user-name'>User</span>.</p>
+        <button id='view-favorites-button' class=' view-favorites navButton'>View Favorites</button>
+        <button id='view-to-cook-button' class='view-to-cook navButton'>View Recipes To Cook</button>
+      </aside>
       <section class='all-cards'>
       </section>
     </main>
