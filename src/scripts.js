@@ -43,6 +43,7 @@ let homeButton = $('.home')
 let cardArea = $('.all-cards');
 let headerSearch = $('#search-input');
 let searchText = headerSearch.val();
+let viewToCookButton = $('#view-to-cook-button');
 
 headerSearch.on('keyup', () =>  searchByName())
 homeButton.on('click', cardButtonConditionals);
@@ -111,6 +112,7 @@ function greetUser() {
 }
 
 function favoriteCard(event) {
+	// debugger
   let specificRecipe = cookbook.recipes.find(recipe => {
     if (recipe.id  === Number(event.target.id)) {
       return recipe;
@@ -126,7 +128,24 @@ function favoriteCard(event) {
   }
 }
 
+function updateRecipesToCook(event) {
+	debugger
+	let specificRecipe = cookbook.recipes.find(recipe => {
+		if (recipe.id  === Number(event.target.id)) {
+			return recipe;
+		}
+	})
+	if (!$(event.target).hasClass('add-active')) {
+		$(event.target).addClass('add-active');
+		user.addRecipesToCook(specificRecipe);
+	} else if ($(event.target).hasClass('add-active')) {
+		$(event.target).removeClass('add-active');
+		user.removeFromRecipesToCook(specificRecipe)
+	}
+}
+
 function cardButtonConditionals(event) {
+	debugger
   if ($(event.target).hasClass('favorite')) {
     favoriteCard(event);
   } else if ($(event.target).hasClass('card-picture')) {
@@ -134,8 +153,12 @@ function cardButtonConditionals(event) {
   } else if ($(event.target).hasClass('home')) {
     favButton.html('View Favorites');
     populateCards(cookbook.recipes);
-  }
+  } else if ($(event.target).hasClass('add')) {
+		updateRecipesToCook(event);
+	}
 }
+
+
 
 function displayDirections(event) {
   let newRecipeInfo = cookbook.recipes.find(recipe => {
