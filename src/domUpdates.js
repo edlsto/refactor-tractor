@@ -39,7 +39,6 @@ let domUpdates = {
 	  cookbookArchive = cookbook;
 	  this.searchByName(cookbook)
 		this.cardButtonConditionals(cookbook)
-		console.log(cookbook)
 	},
 
 	populateCards(recipes) {
@@ -89,6 +88,12 @@ let domUpdates = {
 	  }
 	},
 
+	closeRecipe(cookbook) {
+		this.populateCards(cookbook.recipes)
+		cardArea.removeClass('display-recipe');
+		cardArea.addClass('all-cards')
+	},
+
 	displayDirections(event, cookbook) {
 		console.log(cookbook)
 	  let newRecipeInfo = cookbook.recipes.find(recipe => {
@@ -98,9 +103,12 @@ let domUpdates = {
 	  })
 	  let recipeObject = new Recipe(newRecipeInfo, ingredientsArchive);
 	  let cost = recipeObject.calculateCost()
-	  let costInDollars = (cost / 100).toFixed(2)
-	  cardArea.add('all');
+	  let costInDollars = (cost / 100).toFixed(2);
+		cardArea.add('all')
+		cardArea.addClass('display-recipe');
+		cardArea.removeClass('all-cards')
 	  cardArea.html(`<h3>${recipeObject.name}</h3>
+			<div class="close-btn">x</div>
 	  <p class='all-recipe-info'>
 	  <strong>It will cost: </strong><span class='cost recipe-info'>
 	  $${costInDollars}</span><br><br>
@@ -174,10 +182,8 @@ let domUpdates = {
 	  }
 	},
 	cardButtonConditionals(cookbook) {
-		console.log(event)
-		console.log(cookbook)
 		if(!event) {
-			this.populateCards(results)
+			this.populateCards(cookbook.recipes)
 		} else if ($(event.target).hasClass('favorite')) {
 			this.favoriteCard(event);
 		} else if ($(event.target).hasClass('card-picture')) {
@@ -187,11 +193,6 @@ let domUpdates = {
 			this.populateCards(cookbook.recipes);
 		}
 	}
-
-
-
-
-
 };
 
 export default  domUpdates;
