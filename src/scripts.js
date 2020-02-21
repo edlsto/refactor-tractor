@@ -49,6 +49,7 @@ headerSearch.on('keyup', () =>  searchByName())
 homeButton.on('click', cardButtonConditionals);
 favButton.on('click', viewFavorites);
 cardArea.on('click', cardButtonConditionals);
+viewToCookButton.on('click', viewRecipesToCook);
 
 function onStartup(cookbook, recipeData, ingredientData, users) {
   let userId = (Math.floor(Math.random() * 49) + 1)
@@ -112,7 +113,9 @@ function greetUser() {
 }
 
 function favoriteCard(event) {
-	// debugger
+	if (cardArea.hasClass('all')) {
+		cardArea.removeClass('all')
+	}
   let specificRecipe = cookbook.recipes.find(recipe => {
     if (recipe.id  === Number(event.target.id)) {
       return recipe;
@@ -128,8 +131,10 @@ function favoriteCard(event) {
   }
 }
 
-function updateRecipesToCook(event) {
-	debugger
+function addActiveToAddButton(event) {
+	if (cardArea.hasClass('all')) {
+		cardArea.removeClass('all')
+	}
 	let specificRecipe = cookbook.recipes.find(recipe => {
 		if (recipe.id  === Number(event.target.id)) {
 			return recipe;
@@ -137,15 +142,68 @@ function updateRecipesToCook(event) {
 	})
 	if (!$(event.target).hasClass('add-active')) {
 		$(event.target).addClass('add-active');
+		viewToCookButton.html('View Recipes To Cook');
 		user.addRecipesToCook(specificRecipe);
 	} else if ($(event.target).hasClass('add-active')) {
 		$(event.target).removeClass('add-active');
-		user.removeFromRecipesToCook(specificRecipe)
+		user.removeRecipesToCook(specificRecipe);
 	}
 }
 
+function updateRecipesToCook(event) {
+	console.log(cookbook);
+	let specificRecipe = cookbook.recipes.find(recipe => {
+		console.log(event.target.id);
+		return recipe.id  === Number(event.target.id)
+
+		// console.log(user);
+		// console.log(favoriteRecipes);
+	})
+			console.log(specificRecipe);
+	if (!$(event.target).hasClass('add-active')) {
+		$(event.target).addClass('add-active');
+		user.addRecipesToCook(specificRecipe);
+	} else if ($(event.target).hasClass('add-active')) {
+		$(event.target).removeClass('add-active');
+		user.removeFromRecipesToCook(specificRecipe);
+	}
+}
+
+function viewRecipesToCook(event) {
+	if (cardArea.hasClass('all')) {
+    cardArea.removeClass('all')
+  }
+	if (!user.recipesToCook.length) {
+		viewToCookButton.html('You have no recipes to cook!');
+		populateCards(cookbook.recipes);
+		return
+	} else {
+		viewToCookButton.html('Refresh Recipes to Cook');
+		cardArea.html('');
+		console.log(user.recipesToCook);
+		user.recipesToCook.forEach(recipe => {
+			cardArea.prepend(`<div id='${recipe.id}'
+			class='card'>
+			<header id='${recipe.id}' class='card-header'>
+			<label for='add-button' class='hidden'>Click to add recipe</label>
+			<button id='${recipe.id}' aria-label='add-button' class='add-button card-button'>
+			<img id='${recipe.id}' class='add add-active'
+			src='https://image.flaticon.com/icons/svg/32/32339.svg' alt='Add to
+			recipes to cook'></button>
+			<label for='favorite-button' class='hidden'>Click to favorite recipe
+			</label>
+			<button id='${recipe.id}' aria-label='favorite-button' class='favorite card-button'>
+			</button></header>
+			<span id='${recipe.id}' class='recipe-name'>${recipe.name}</span>
+			<img id='${recipe.id}' tabindex='0' class='card-picture'
+			src='${recipe.image}' alt='Food from recipe'>
+			</div>`)
+		})
+	}
+	}
+
+
 function cardButtonConditionals(event) {
-	debugger
   if ($(event.target).hasClass('favorite')) {
     favoriteCard(event);
   } else if ($(event.target).hasClass('card-picture')) {
@@ -155,6 +213,7 @@ function cardButtonConditionals(event) {
     populateCards(cookbook.recipes);
   } else if ($(event.target).hasClass('add')) {
 		updateRecipesToCook(event);
+		// addActiveToAddButton(event);
 	}
 }
 
@@ -202,6 +261,16 @@ function getFavorites() {
   } else return
 }
 
+function getRecipesToCook() {
+  if (user.recipesToCook.length) {
+    user.recipesToCook.forEach(recipe => {
+		console.log(`.add${recipe.id}`);
+      $(`.add${recipe.id}`).addClass('add-active')
+			debugger
+    })
+  } else return
+}
+
 function populateCards(recipes) {
   cardArea.html('');
   if (cardArea.hasClass('all')) {
@@ -213,7 +282,7 @@ function populateCards(recipes) {
         <header id='${recipe.id}' class='card-header'>
           <label for='add-button' class='hidden'>Click to add recipe</label>
           <button id='${recipe.id}' aria-label='add-button' class='add-button card-button'>
-            <img id='${recipe.id} favorite' class='add'
+            <img id='${recipe.id}' class='add'
             src='https://image.flaticon.com/icons/svg/32/32339.svg' alt='Add to
             recipes to cook'>
           </button>
@@ -227,4 +296,5 @@ function populateCards(recipes) {
     </div>`)
   })
   getFavorites();
+	getRecipesToCook();
 };
