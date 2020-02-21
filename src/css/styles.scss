@@ -183,6 +183,9 @@ h3 {
 
 main {
   background-color: #37515C;
+  display: grid;
+  grid-template-areas: 'aside cards';
+  grid-template-columns: 1fr 3fr;
   height: 100%;
   width: 100%;
 }
