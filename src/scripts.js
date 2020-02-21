@@ -44,6 +44,7 @@ let homeButton = $('.home')
 let cardArea = $('.all-cards');
 let headerSearch = $('#search-input');
 let searchText = headerSearch.val();
+let viewToCookButton = $('#view-to-cook-button');
 
 headerSearch.on('keyup', () => domUpdates.searchByName(cookbook))
 homeButton.on('click', domUpdates.cardButtonConditionals);
