@@ -110,6 +110,15 @@ h1 {
   display: none;
 }
 
+.display-recipe {
+  display: relative;
+}
+
+.close-btn {
+  display: absolute;
+  color: white;
+}
+
 
 .favorite {
   background-color: $headers-background;
