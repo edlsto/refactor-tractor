@@ -47,9 +47,9 @@ let searchText = headerSearch.val();
 let viewToCookButton = $('#view-to-cook-button');
 
 headerSearch.on('keyup', () => domUpdates.searchByName(cookbook))
+cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook));
 homeButton.on('click', domUpdates.cardButtonConditionals);
 favButton.on('click', domUpdates.viewFavorites);
-cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook));
 cardArea.on('click', () => {
 	if ($(event.target).hasClass('close-btn')) {
 		domUpdates.closeRecipe(cookbook)
