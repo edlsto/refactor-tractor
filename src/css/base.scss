@@ -109,12 +109,51 @@ h1 {
 }
 
 .display-recipe {
-  display: relative;
+  display: flex;
+  padding: 2em;
+  flex-wrap: wrap;
+}
+
+.recipe-title-container {
+  flex: 0 0 30%;
+  padding-right: 2em
 }
 
 .close-btn {
   display: absolute;
   color: white;
+}
+
+.total-cost {
+  color: white;
+  font-size: 1.5em;
+}
+
+.alert {
+  background-color: #76FF91;
+  flex: 0 0 100%;
+  margin-bottom: 1em;
+  text-align: center;
+  color: gray;
+  font-size: 1.5em;
+  line-height: 90%;
+}
+
+.alert-cant-cook {
+  background-color: #FF664C;
+}
+
+.display-recipe .recipe-picture {
+  width: 100%;
+  cursor: default;
+  object-fit: cover;
+  flex: 1 0 30%;
+  height: 250px;
+}
+
+.shopping-list {
+  font-size: .5em;
+  line-height: 80%;
 }
 
 
@@ -179,6 +218,7 @@ ol {
 h3 {
   color: $headers-background;
   font-size: 250%;
+  margin-top: 0
 }
 
 .recipe-name {
