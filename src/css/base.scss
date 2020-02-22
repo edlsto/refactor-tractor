@@ -120,8 +120,18 @@ h1 {
 }
 
 .close-btn {
-  display: absolute;
-  color: white;
+  color: black;
+  margin: 0 auto;
+  background: lightgray;
+  padding: .2em;
+  margin: 1em auto 2em auto;
+  width: 25%;
+
+}
+
+.close-btn-wrapper {
+  flex: 0 0 100%;
+  text-align: center;
 }
 
 .total-cost {
@@ -137,10 +147,26 @@ h1 {
   color: gray;
   font-size: 1.5em;
   line-height: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1em 0;
 }
+
+.alert h3 {
+  font-size: .9em;
+}
+
 
 .alert-cant-cook {
   background-color: #FF664C;
+}
+
+.can-or-cant-cook {
+  flex: 0 0 100%
+}
+
+.you-will-need {
+  flex: 0 0 100%
 }
 
 .display-recipe .recipe-picture {
@@ -154,6 +180,8 @@ h1 {
 .shopping-list {
   font-size: .5em;
   line-height: 80%;
+  width: 33%;
+  color: white;
 }
 
 
@@ -213,6 +241,25 @@ ol {
   color: $headers-background;
   font-size: 220%;
   width: 100%;
+}
+
+.all-recipe-info {
+  display: flex
+}
+
+.recipe-ingredients-needed {
+  flex: 0 0 50%;
+  margin-right: 1em;
+  font-size: .6em
+}
+
+.recipe-instructions {
+  flex: 0 0 50%;
+  font-size: .3em;
+}
+
+.recipe-instructions p {
+  font-size: 3em
 }
 
 h3 {
