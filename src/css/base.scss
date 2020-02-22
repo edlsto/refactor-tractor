@@ -108,6 +108,82 @@ h1 {
   display: none;
 }
 
+.display-recipe {
+  display: flex;
+  padding: 2em;
+  flex-wrap: wrap;
+}
+
+.recipe-title-container {
+  flex: 0 0 30%;
+  padding-right: 2em
+}
+
+.close-btn {
+  color: black;
+  margin: 0 auto;
+  background: lightgray;
+  padding: .2em;
+  margin: 1em auto 2em auto;
+  width: 25%;
+
+}
+
+.close-btn-wrapper {
+  flex: 0 0 100%;
+  text-align: center;
+}
+
+.total-cost {
+  color: white;
+  font-size: 1.5em;
+}
+
+.alert {
+  background-color: #76FF91;
+  flex: 0 0 100%;
+  margin-bottom: 1em;
+  text-align: center;
+  color: gray;
+  font-size: 1.5em;
+  line-height: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1em 0;
+}
+
+.alert h3 {
+  font-size: .9em;
+}
+
+
+.alert-cant-cook {
+  background-color: #FF664C;
+}
+
+.can-or-cant-cook {
+  flex: 0 0 100%
+}
+
+.you-will-need {
+  flex: 0 0 100%
+}
+
+.display-recipe .recipe-picture {
+  width: 100%;
+  cursor: default;
+  object-fit: cover;
+  flex: 1 0 30%;
+  height: 250px;
+}
+
+.shopping-list {
+  font-size: .5em;
+  line-height: 80%;
+  width: 33%;
+  color: white;
+}
+
 
 .favorite {
   background-color: $headers-background;
@@ -167,9 +243,29 @@ ol {
   width: 100%;
 }
 
+.all-recipe-info {
+  display: flex
+}
+
+.recipe-ingredients-needed {
+  flex: 0 0 50%;
+  margin-right: 1em;
+  font-size: .6em
+}
+
+.recipe-instructions {
+  flex: 0 0 50%;
+  font-size: .3em;
+}
+
+.recipe-instructions p {
+  font-size: 3em
+}
+
 h3 {
   color: $headers-background;
   font-size: 250%;
+  margin-top: 0
 }
 
 .recipe-name {

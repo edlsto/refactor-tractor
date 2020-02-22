@@ -1,3 +1,5 @@
+// import domUpdates from './domUpdates';
+
 class Pantry {
   constructor(userIngredients) {
     this.contents = userIngredients;
@@ -33,6 +35,10 @@ class Pantry {
     return true;
   }
 
+  // displayCanCookMealinDOM(event, cookbook) {
+  //   domUpdates.displayDirections(event, cookbook)
+  // }
+
   cookMeal(recipe) {
     if (this.canCookMeal(recipe)) {
       this.contents = this.contents.map(pantryItem => {
@@ -51,34 +57,59 @@ class Pantry {
 
   getItemsNeeded(recipe) {
     if (!this.canCookMeal(recipe)) {
+      console.log(recipe)
       let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
         let pantryItem = this.findInPantry(recipeIngredient.id)
+
         return !pantryItem || recipeIngredient.quantity.amount > pantryItem.amount
-      })
-      itemsNeeded = itemsNeeded.map(item => {
-        let pantryItem = this.findInPantry(item.id)
-        if (!pantryItem) {
-          return {
-            name: item.name,
-            quantityNeeded: item.quantity.amount,
-            id: item.id,
-            cost: this.getCost(item, item.quantity.amount, recipe)
-          }
+      }).map(ingredient => {
+        let quantityInPantry;
+        if (!this.contents.find(pantryItem => {
+          return pantryItem.ingredient === ingredient.id
+        })) {
+          quantityInPantry = 0
         } else {
-          return {
-            name: item.name,
-            quantityNeeded: item.quantity.amount - pantryItem.amount,
-            id: item.id,
-            cost: this.getCost(item, item.quantity.amount, recipe)
-          }
+          quantityInPantry = ingredient.quantity.amount - this.contents.find(pantryItem => {
+            return pantryItem.ingredient === ingredient.id
+          }).amount
+        };
+        let ingredientData = recipe.ingredientsData.find(ingredentInfoItem => ingredient.id === ingredentInfoItem.id);
+        // console.log(this.contents)
+        return {
+          name: ingredientData.name,
+          id: ingredient.id,
+          quantityNeededInRecipe: ingredient.quantity.amount,
+          quantityInPantry: quantityInPantry,
+          amountNeeded: ingredient.quantity.amount - quantityInPantry,
+          costPerItem: ingredientData.estimatedCostInCents,
+          costOfWhatsNeededInCents: (ingredient.quantity.amount - quantityInPantry) * ingredientData.estimatedCostInCents,
+          unit: ingredient.quantity.unit
         }
+
       })
+      // console.log(recipe.ingredientsData)
+      // console.log(itemsNeeded)
+      // itemsNeeded = itemsNeeded.map(item => {
+      //
+      //   let ingredientDetails = recipe.ingredientsData.find(ingredient => {
+      //     return ingredient.id === item.id
+      //   })
+      //   console.log(ingredientDetails)
+      //   // console.log(recipe)
+      //     return {
+      //       name: ingredientDetails.name,
+      //       quantityNeededInRecipe: item.quantity.amount,
+      //       id: item.id,
+      //       cost: this.getCost(item, item.quantity.amount, recipe)
+      //     }
+      // })
       return itemsNeeded
     }
   }
 
+
   getCost(item, amount, recipe) {
-    return recipe.ingredientsData.find(ingredient => {
+    return recipe.ingredients.find(ingredient => {
       return ingredient.id === item.id
     }).estimatedCostInCents * amount
   }
@@ -86,7 +117,7 @@ class Pantry {
   getCostOfItemsNeeded(recipe) {
     let itemsNeeded = this.getItemsNeeded(recipe);
     return itemsNeeded.reduce((totalCost, item) => {
-      totalCost += item.cost
+      totalCost += item.costOfWhatsNeededInCents
       return totalCost;
     }, 0)
   }
