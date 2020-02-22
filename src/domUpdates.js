@@ -31,14 +31,14 @@ let domUpdates = {
 	  user = new User(userId, newUser.name, newUser.pantry)
 	  pantry = new Pantry(newUser.pantry)
 	  cookbook.recipes = cookbook.recipes.map((recipe) => {
-	    return new Recipe(recipe)
+	    return new Recipe(recipe, ingredientData)
 	  })
 	  this.populateCards(recipeData);
 	  this.greetUser();
 	  ingredientsArchive = ingredientData;
 	  cookbookArchive = cookbook;
 	  this.searchByName(cookbook)
-		this.cardButtonConditionals(cookbook)
+		this.cardButtonConditionals(cookbook, pantry)
 	},
 
 	populateCards(recipes) {
@@ -95,7 +95,7 @@ let domUpdates = {
 	},
 
 	displayDirections(event, cookbook) {
-		console.log(cookbook)
+		// console.log(pantry)
 	  let newRecipeInfo = cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
@@ -107,15 +107,40 @@ let domUpdates = {
 		cardArea.add('all')
 		cardArea.addClass('display-recipe');
 		cardArea.removeClass('all-cards')
-	  cardArea.html(`<h3>${recipeObject.name}</h3>
+		let cookability = pantry.canCookMeal(newRecipeInfo) ? 'can' : 'can\'t'
+
+	  cardArea.html(`<div class="alert"><p>You ${cookability} cook this meal, based on what's on your pantry!</p>
+		</div><div class="recipe-title-container"><h3>${recipeObject.name}</h3>
+			<p class="total-cost">Total cost of this recipe: <span class='cost recipe-info'>
+			$${costInDollars}</p>
+			</div>
+			<img id='${recipeObject.id}' tabindex='0' class='recipe-picture'
+			src='${recipeObject.image}' alt='click to view recipe for ${recipeObject.name}'>
 			<div class="close-btn">x</div>
 	  <p class='all-recipe-info'>
-	  <strong>It will cost: </strong><span class='cost recipe-info'>
-	  $${costInDollars}</span><br><br>
+
 	  <strong>You will need: </strong><span class='ingredients recipe-info'></span>
 	  <strong>Instructions: </strong><ol><span class='instructions recipe-info'>
 	  </span></ol>
 	  </p>`);
+		console.log(pantry.getItemsNeeded(newRecipeInfo))
+		console.log(pantry.getCostOfItemsNeeded(newRecipeInfo))
+		let alert = $('.alert')
+		const upperCase = (word) => {
+			let letters = word.split('');
+			letters[0] = letters[0].toUpperCase();
+			return letters.join('')
+		}
+		if (!pantry.canCookMeal(newRecipeInfo)) {
+			alert.addClass('alert-cant-cook');
+			alert.append(`<p>You will need: (total cost of $${(pantry.getCostOfItemsNeeded(newRecipeInfo)/100).toFixed(2)})</p>`)
+			pantry.getItemsNeeded(newRecipeInfo).forEach(item => {
+				$('.alert').append(`<div class="shopping-list"><p>${upperCase(item.name)} (${Math.round(item.amountNeeded * 100) / 100} ${item.unit}, at a cost of $${(item.costOfWhatsNeededInCents/100).toFixed(2)})</p></div>`)
+			});
+		}
+		// console.log(newRecipeInfo)
+
+		// console.log(pantry)
 	  let ingredientsSpan = $('.ingredients');
 	  let instructionsSpan = $('.instructions');
 	  recipeObject.ingredients.forEach(ingredient => {
