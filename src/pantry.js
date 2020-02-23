@@ -1,8 +1,8 @@
-// import domUpdates from './domUpdates';
 
 class Pantry {
-  constructor(userIngredients) {
+  constructor(userIngredients, ingredientsData) {
     this.contents = userIngredients;
+    this.ingredientsData = ingredientsData;
   }
 
   findInPantry(recipeItemId) {
@@ -35,10 +35,6 @@ class Pantry {
     return true;
   }
 
-  // displayCanCookMealinDOM(event, cookbook) {
-  //   domUpdates.displayDirections(event, cookbook)
-  // }
-
   cookMeal(recipe) {
     if (this.canCookMeal(recipe)) {
       this.contents = this.contents.map(pantryItem => {
@@ -57,7 +53,6 @@ class Pantry {
 
   getItemsNeeded(recipe) {
     if (!this.canCookMeal(recipe)) {
-      console.log(recipe)
       let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
         let pantryItem = this.findInPantry(recipeIngredient.id)
 
@@ -87,26 +82,9 @@ class Pantry {
         }
 
       })
-      // console.log(recipe.ingredientsData)
-      // console.log(itemsNeeded)
-      // itemsNeeded = itemsNeeded.map(item => {
-      //
-      //   let ingredientDetails = recipe.ingredientsData.find(ingredient => {
-      //     return ingredient.id === item.id
-      //   })
-      //   console.log(ingredientDetails)
-      //   // console.log(recipe)
-      //     return {
-      //       name: ingredientDetails.name,
-      //       quantityNeededInRecipe: item.quantity.amount,
-      //       id: item.id,
-      //       cost: this.getCost(item, item.quantity.amount, recipe)
-      //     }
-      // })
       return itemsNeeded
     }
   }
-
 
   getCost(item, amount, recipe) {
     return recipe.ingredients.find(ingredient => {
@@ -123,11 +101,5 @@ class Pantry {
   }
 
 }
-
-
-
-
-
-
 
 export default Pantry;
