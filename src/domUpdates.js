@@ -13,9 +13,8 @@ let viewToCookButton = $('#view-to-cook-button');
 
 let domUpdates = {
 
-	updateRecipesToCook(event, cookbook, user) {
-		console.log(cookbook);
-		let specificRecipe = cookbook.recipes.find(recipe => {
+	updateRecipesToCook(event, user) {
+		let specificRecipe = user.cookbook.recipes.find(recipe => {
 			console.log(event.target.id);
 			return recipe.id  === Number(event.target.id)
 		})
@@ -45,16 +44,13 @@ getFavorites(user) {
 	} else return
 },
 
-	populateCards(recipes, user) {
+	populateCards(user, recipes = user.cookbook.recipes) {
 	  cardArea.html('');
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
 	  if (cardArea.hasClass('all')) {
 	    cardArea.removeClass('all')
 	  }
-		if (user) {
-		user.recipesToCook
-		}
 	  recipes.forEach(recipe => {
 	    cardArea.prepend(`<div id='${recipe.id}'
 	    class='card'>
@@ -90,32 +86,33 @@ getFavorites(user) {
 	  userName.html(user.name.split(' ')[0] + ' ' + user.name.split(' ')[1][0]);
 	},
 
-	searchByName(cookbook, user) {
-	  let results = cookbook.findRecipeByName(headerSearch.val())
+	searchByName(user) {
+	  let results = user.cookbook.findRecipeByName(headerSearch.val())
 	  if(results !== undefined) {
-	    this.populateCards(results, user)
+	    this.populateCards(user, results)
 	  }
 	},
 
-	closeRecipe(recipes, cookbook, user) {
-		this.populateCards(recipes.recipeData, user)
+	closeRecipe(user) {
+		this.populateCards(user)
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
 	},
 
-	displayDirections(event, cookbook, pantry, ingredientsArchive) {
-	  let newRecipeInfo = cookbook.recipes.find(recipe => {
+	displayDirections(event, user) {
+		console.log(user)
+	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
 	    }
 	  })
-	  let recipeObject = new Recipe(newRecipeInfo, ingredientsArchive);
+	  let recipeObject = new Recipe(newRecipeInfo, user.pantry.ingredientsData);
 	  let cost = recipeObject.calculateCost()
 	  let costInDollars = (cost / 100).toFixed(2);
 		cardArea.add('all')
 		cardArea.addClass('display-recipe');
 		cardArea.removeClass('all-cards')
-		let cookability = pantry.canCookMeal(newRecipeInfo) ? 'can' : 'can\'t'
+		let cookability = user.pantry.canCookMeal(newRecipeInfo) ? 'can' : 'can\'t'
 
 	  cardArea.html(`
 			<div class="close-btn-wrapper"><div class="close-btn">Close recipe</div></div>
@@ -144,10 +141,10 @@ getFavorites(user) {
 			letters[0] = letters[0].toUpperCase();
 			return letters.join('')
 		}
-		if (!pantry.canCookMeal(newRecipeInfo)) {
+		if (!user.pantry.canCookMeal(newRecipeInfo)) {
 			alert.addClass('alert-cant-cook');
-			alert.append(`<div class="you-will-need"><h3>You will need (total cost of $${(pantry.getCostOfItemsNeeded(newRecipeInfo)/100).toFixed(2)}): </h3></div>`)
-			pantry.getItemsNeeded(newRecipeInfo).forEach(item => {
+			alert.append(`<div class="you-will-need"><h3>You will need (total cost of $${(user.pantry.getCostOfItemsNeeded(newRecipeInfo)/100).toFixed(2)}): </h3></div>`)
+			user.pantry.getItemsNeeded(newRecipeInfo).forEach(item => {
 				$('.alert').append(`<div class="shopping-list"><p>${upperCase(item.name)} (${Math.round(item.amountNeeded * 100) / 100} ${item.unit}, at a cost of $${(item.costOfWhatsNeededInCents/100).toFixed(2)})</p></div>`)
 			});
 		}
@@ -156,7 +153,7 @@ getFavorites(user) {
 	  recipeObject.ingredients.forEach(ingredient => {
 	    ingredientsSpan.prepend( `<ul><li>
 	    ${ingredient.quantity.amount.toFixed(2)} ${ingredient.quantity.unit}
-	    ${ingredientsArchive.find(item => {
+	    ${user.pantry.ingredientsData.find(item => {
 	      return item.id === ingredient.id
 	    }).name}</li></ul>`)
 	  })
@@ -167,8 +164,8 @@ getFavorites(user) {
 	  })
 	},
 
- favoriteCard(event, cookbook, user) {
-	  let specificRecipe = cookbook.recipes.find(recipe => {
+ favoriteCard(event, user) {
+	  let specificRecipe = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id  === Number(event.target.id)) {
 	      return recipe;
 	    }
@@ -185,13 +182,13 @@ getFavorites(user) {
 
 
 
-	viewFavorites(user, cookbook) {
+	viewFavorites(user) {
 	  if (cardArea.hasClass('all')) {
 	    cardArea.removeClass('all')
 	  }
 	  if (!user.favoriteRecipes.length) {
 	    favButton.html('You have no favorites!');
-	    this.populateCards(cookbook.recipes, user);
+	    this.populateCards(user);
 	    return
 	  } else {
 	    favButton.html('Refresh Favorites');
@@ -216,25 +213,24 @@ getFavorites(user) {
 	    })
 	  }
 	},
-	cardButtonConditionals(cookbook, user, ingredientsArchive) {
-		console.log(cookbook)
+	cardButtonConditionals(event, user) {
 		 if ($(event.target).hasClass('favorite')) {
-			this.favoriteCard(event, cookbook, user);
+			this.favoriteCard(event, user);
 		} else if ($(event.target).hasClass('card-picture')) {
-			this.displayDirections(event, cookbook, user.pantry, ingredientsArchive);
+			this.displayDirections(event, user);
 		} else if ($(event.target).hasClass('add')) {
-		this.updateRecipesToCook(event, cookbook, user);
+		this.updateRecipesToCook(event, user);
 	}
 	},
 
-	viewRecipesToCook(event, user, cookbook) {
+	viewRecipesToCook(event, user) {
 		console.log(user)
 	if (cardArea.hasClass('all')) {
     cardArea.removeClass('all')
   }
 	if (!user.recipesToCook.length) {
 		viewToCookButton.html('You have no recipes to cook!');
-		this.populateCards(cookbook.recipes, user);
+		this.populateCards(user);
 		return
 	} else {
 		viewToCookButton.html('Refresh Recipes to Cook');
