@@ -216,12 +216,12 @@ getFavorites(user) {
 	    })
 	  }
 	},
-	cardButtonConditionals(cookbook, user, pantry, ingredientsArchive) {
+	cardButtonConditionals(cookbook, user, ingredientsArchive) {
+		console.log(cookbook)
 		 if ($(event.target).hasClass('favorite')) {
 			this.favoriteCard(event, cookbook, user);
 		} else if ($(event.target).hasClass('card-picture')) {
-
-			this.displayDirections(event, cookbook, pantry, ingredientsArchive);
+			this.displayDirections(event, cookbook, user.pantry, ingredientsArchive);
 		} else if ($(event.target).hasClass('add')) {
 		this.updateRecipesToCook(event, cookbook, user);
 	}
