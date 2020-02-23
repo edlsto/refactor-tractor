@@ -1,13 +1,18 @@
 import Pantry from './pantry';
-
+import Cookbook from './cookbook';
+import Recipe from './recipe'
 
 class User {
-  constructor(id, name, pantry) {
+  constructor(id, name, pantry, recipes, ingredients) {
     this.id = id;
     this.name = name;
-    this.pantry = new Pantry(pantry);
+    this.pantry = new Pantry(pantry, ingredients.ingredientsData);
     this.favoriteRecipes = [];
     this.recipesToCook = [];
+    this.cookbook = new Cookbook(recipes.recipeData);
+	  this.cookbook.recipes = this.cookbook.recipes.map((recipe) => {
+	    return new Recipe(recipe, ingredients.ingredientsData)
+	  })
   }
 
   addToFavorites(recipe) {
