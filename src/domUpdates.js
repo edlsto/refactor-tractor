@@ -151,7 +151,13 @@ let domUpdates = {
 		  <p>Instructions: </p><ol><span class='instructions recipe-info'>
 		  </span></ol>
 		  </div>
-		</div>`);
+		</div>
+
+		<div class='post-delete-buttons'>
+	 <button id= aria-label='post-button' class='post-button'>'get-ingredients'</button>
+	 <button id= aria-label='delete-button' class='delete-button'> 'cook-recipe' </button>
+	 </div>
+		`);
 		let alert = $('.alert')
 		const upperCase = (word) => {
 			let letters = word.split('');
