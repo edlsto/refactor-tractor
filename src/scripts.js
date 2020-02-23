@@ -38,31 +38,23 @@ function onStartup(recipes, ingredients, users) {
 	  let newUser = users.find(user => {
 	    return user.id === Number(userId);
 	  });
-	  const user = new User(userId, newUser.name, newUser.pantry)
-		const cookbook = new Cookbook(recipes.recipeData);
-	  cookbook.recipes = cookbook.recipes.map((recipe) => {
-	    return new Recipe(recipe, ingredients.ingredientsData)
-	  })
-		console.log(user)
-	  domUpdates.populateCards(recipes.recipeData, user);
+	  const user = new User(userId, newUser.name, newUser.pantry, recipes, ingredients)
+	  domUpdates.populateCards(user);
 	  domUpdates.greetUser(user);
 
 		//Event listeners
-		headerSearch.on('keyup', () => domUpdates.searchByName(cookbook, user))
-		cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, ingredients.ingredientsData));
+		headerSearch.on('keyup', () => domUpdates.searchByName(user))
+		cardArea.on('click', () => domUpdates.cardButtonConditionals(event, user));
 		homeButton.on('click', () => {
 			favButton.html('View Favorites');
-			domUpdates.populateCards(cookbook.recipes, user)
+			domUpdates.populateCards(user)
 		})
-
-
-
-		favButton.on('click', () => domUpdates.viewFavorites(user, cookbook));
+		favButton.on('click', () => domUpdates.viewFavorites(user));
 		cardArea.on('click', () => {
 			if ($(event.target).hasClass('close-btn')) {
-				domUpdates.closeRecipe(recipes, cookbook, user)
+				domUpdates.closeRecipe(user)
 			}
 		});
-		viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user, cookbook));
+		viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
 
 	}
