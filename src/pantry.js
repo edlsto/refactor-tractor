@@ -1,4 +1,4 @@
-// import domUpdates from './domUpdates';
+import domUpdates from './domUpdates';
 
 class Pantry {
   constructor(userIngredients) {
@@ -121,6 +121,50 @@ class Pantry {
       return totalCost;
     }, 0)
   }
+
+getIngredientById() {
+  this.getItemsNeeded(recipe).map((ingredient) => {
+    return ingredient.id
+  })
+}
+
+getIngredientModification() {
+  this.getItemsNeeded(recipe).map((ingredient) => {
+    return ingredient.amountNeeded
+})
+}
+
+deleteIngredient(user) {
+  fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData'), {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "userID": user.id,
+        "ingredientID": this.getIngredientById(),
+        "ingredientModification": this.getIngredientModification()
+      })
+    }).then(() => {
+      alert('Ingredient Deleted!');
+    }).catch(() => alert('Delete failed to happen'));
+}
+
+postIngredient(user) {
+    fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData'), {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "userID": user.id,
+        "ingredientID": this.getIngredientById(),
+        "ingredientModification": this.getIngredientModification()
+      })
+    }).then(() => {
+      alert('Ingredient Added!');
+    }).catch(() => alert('Adding ingredient failed to happen'));
+}
 
 }
 
