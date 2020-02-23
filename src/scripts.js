@@ -39,17 +39,17 @@ function onStartup(recipes, ingredients, users) {
 	    return user.id === Number(userId);
 	  });
 	  const user = new User(userId, newUser.name, newUser.pantry)
-	  const pantry = new Pantry(newUser.pantry)
 		const cookbook = new Cookbook(recipes.recipeData);
 	  cookbook.recipes = cookbook.recipes.map((recipe) => {
 	    return new Recipe(recipe, ingredients.ingredientsData)
 	  })
+		console.log(user)
 	  domUpdates.populateCards(recipes.recipeData, user);
 	  domUpdates.greetUser(user);
 
 		//Event listeners
 		headerSearch.on('keyup', () => domUpdates.searchByName(cookbook, user))
-		cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, pantry, ingredients.ingredientsData));
+		cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, ingredients.ingredientsData));
 		homeButton.on('click', () => {
 			favButton.html('View Favorites');
 			domUpdates.populateCards(cookbook.recipes, user)
