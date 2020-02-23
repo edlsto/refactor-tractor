@@ -34,7 +34,7 @@ Promise.all([recipes, ingredients, userss]).then(promises => {
 }).then(() => {
   users = userss.wcUsersData
   cookbook = new Cookbook(recipes.recipeData);
-  domUpdates.onStartup(cookbook, cookbook.recipes, ingredients.ingredientsData, users)
+  onStartup(cookbook, cookbook.recipes, ingredients.ingredientsData, users)
   // greetUser();
 }).catch(error => console.log(error.message));
 
@@ -46,12 +46,34 @@ let headerSearch = $('#search-input');
 let searchText = headerSearch.val();
 let viewToCookButton = $('#view-to-cook-button');
 
-headerSearch.on('keyup', () => domUpdates.searchByName(cookbook))
-cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook));
-homeButton.on('click', domUpdates.cardButtonConditionals);
-favButton.on('click', domUpdates.viewFavorites);
+headerSearch.on('keyup', () => domUpdates.searchByName(cookbook, user))
+cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, pantry, ingredientsArchive));
+homeButton.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, pantry, ingredientsArchive));
+favButton.on('click', () => domUpdates.viewFavorites(user));
 cardArea.on('click', () => {
 	if ($(event.target).hasClass('close-btn')) {
 		domUpdates.closeRecipe(cookbook)
 	}
-})
+});
+viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
+
+
+function onStartup(cookbook, recipeData, ingredientData, users) {
+	  let userId = (Math.floor(Math.random() * 49) + 1)
+	  let newUser = users.find(user => {
+	    return user.id === Number(userId);
+	  });
+	  user = new User(userId, newUser.name, newUser.pantry)
+	  pantry = new Pantry(newUser.pantry)
+	  cookbook.recipes = cookbook.recipes.map((recipe) => {
+	    return new Recipe(recipe, ingredientData)
+	  })
+	  // domUpdates.populateCards(recipeData, user);
+		ingredientsArchive = ingredientData;
+		domUpdates.cardButtonConditionals(cookbook, user, pantry, ingredientsArchive)
+	  domUpdates.greetUser(user);
+	  cookbookArchive = cookbook;
+
+	  domUpdates.searchByName(cookbook)
+
+	}
