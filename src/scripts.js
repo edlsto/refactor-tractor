@@ -44,7 +44,9 @@ let homeButton = $('.home')
 let cardArea = $('.all-cards');
 let headerSearch = $('#search-input');
 let searchText = headerSearch.val();
-let viewToCookButton = $('#view-to-cook-button');
+let viewToCookButton = $('#view-to-cook-button')
+let postButton = $('.post-button')
+let deleteButton = $('.delete-button');
 
 headerSearch.on('keyup', () => domUpdates.searchByName(cookbook, user))
 cardArea.on('click', () => domUpdates.cardButtonConditionals(cookbook, user, pantry, ingredientsArchive));
@@ -56,6 +58,8 @@ cardArea.on('click', () => {
 	}
 });
 viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
+postButton.on('click', () => pantry.postIngredient(user));
+deleteButton.on('click', () => pantry.deleteIngredient(user));
 
 
 function onStartup(cookbook, recipeData, ingredientData, users) {
