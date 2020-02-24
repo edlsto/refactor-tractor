@@ -97,6 +97,20 @@ getFavorites(user) {
 		cardArea.addClass('all-cards')
 	},
 
+	filterRecipes(user, selected) {
+
+		const filteredRecipes = user.cookbook.recipes.filter(recipe => {
+			return recipe.tags.find(tag => {
+				return selected.includes(tag)
+			})
+		})
+		if (filteredRecipes.length) {
+			this.populateCards(user, filteredRecipes)
+		} else {
+			this.populateCards(user)
+		}
+	},
+
 	displayDirections(event, user) {
 	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
@@ -104,6 +118,7 @@ getFavorites(user) {
 	    }
 	  })
 	  let recipeObject = new Recipe(newRecipeInfo, user.pantry.ingredientsData);
+		console.log(recipeObject)
 	  let cost = recipeObject.calculateCost()
 	  let costInDollars = (cost / 100).toFixed(2);
 		cardArea.add('all')
