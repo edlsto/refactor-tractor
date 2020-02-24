@@ -27,6 +27,7 @@ class Pantry {
   }
 
   canCookMeal(recipe) {
+    console.log(recipe)
     for (let i = 0; i < recipe.ingredients.length; i++) {
       let pantryItem = this.findInPantry(recipe.ingredients[i].id)
       if (!pantryItem || recipe.ingredients[i].quantity.amount > pantryItem.amount) {
@@ -65,35 +66,59 @@ class Pantry {
 
   getItemsNeeded(recipe) {
     if (!this.canCookMeal(recipe)) {
-      let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
+      let initialList = recipe.ingredients.filter(recipeIngredient => {
         let pantryItem = this.findInPantry(recipeIngredient.id)
-
-        return !pantryItem || recipeIngredient.quantity.amount > pantryItem.amount
-      }).map(ingredient => {
-        let quantityInPantry;
-        if (!this.contents.find(pantryItem => {
+        if (!pantryItem) {
+          return true;
+        }
+        return recipeIngredient.quantity.amount > pantryItem.amount
+      })
+      console.log(initialList)
+      let itemsNeeded = initialList.map(ingredient => {
+         this.contents.find(pantryItem => {
           return pantryItem.ingredient === ingredient.id
-        })) {
-          quantityInPantry = 0
-        } else {
-          quantityInPantry = ingredient.quantity.amount - this.contents.find(pantryItem => {
-            return pantryItem.ingredient === ingredient.id
-          }).amount
-        };
-        let ingredientData = recipe.ingredientsData.find(ingredentInfoItem => ingredient.id === ingredentInfoItem.id);
-        // console.log(this.contents)
+        })
+        console.log(this.ingredientsData)
+        const amountInPantry = this.contents.find(pantryIngredient => pantryIngredient.id === ingredient.id) || 0;
+        const quantityNeededInRecipe = ingredient.quantity.amount
+        const ingredientData = this.ingredientsData.find(ingredentInfoItem => ingredient.id === ingredentInfoItem.id);
+
         return {
-          name: ingredientData.name,
           id: ingredient.id,
-          quantityNeededInRecipe: ingredient.quantity.amount,
-          quantityInPantry: quantityInPantry,
-          amountNeeded: ingredient.quantity.amount - quantityInPantry,
+          quantityNeededInRecipe: quantityNeededInRecipe,
+          quantityInPantry: amountInPantry,
+          amountNeeded: quantityNeededInRecipe - amountInPantry,
+          name: ingredientData.name,
           costPerItem: ingredientData.estimatedCostInCents,
-          costOfWhatsNeededInCents: (ingredient.quantity.amount - quantityInPantry) * ingredientData.estimatedCostInCents,
+          costOfWhatsNeededInCents: (quantityNeededInRecipe - amountInPantry) * ingredientData.estimatedCostInCents,
           unit: ingredient.quantity.unit
         }
-
+        // let quantityNeeded;
+        // if (!pantryItem) {
+        //   quantityNeeded = ingredient.quantity.amount
+        // } else {
+        // quantityNeeded = ingredient.quantity.amount - this.contents.find(pantryItem => {
+        //     return pantryItem.ingredient === ingredient.id
+        //   }).amount
+        // }
+        // let ingredientData = recipe.ingredientsData.find(ingredentInfoItem => ingredient.id === ingredentInfoItem.id);
+        // console.log(this.contents)
+      //   return {
+      //     name: ingredientData.name,
+      //     id: ingredient.id,
+      //     quantityNeededInRecipe: ingredient.quantity.amount,
+      //     quantityInPantry: this.contents.find(pantryItem => {
+      //         return pantryItem.ingredient === ingredient.id
+      //       }).amount,
+      //     amountNeeded: quantityNeeded,
+      //     costPerItem: ingredientData.estimatedCostInCents,
+      //     costOfWhatsNeededInCents: quantityNeeded * ingredientData.estimatedCostInCents,
+      //     unit: ingredient.quantity.unit
+      //   }
+      //
       })
+      console.log(itemsNeeded)
+
       return itemsNeeded
     }
   }
@@ -128,6 +153,7 @@ getIngredientModification(recipe) {
 }
 
 deleteIngredients(user, recipe) {
+  if (this.canCookMeal(recipe)) {
   const ingredients = this.cookMeal(recipe);
   const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
     console.log(user.id, ingredient.ingredientId, -Math.abs(ingredient.amountInRecipe),  'infoToPost')
@@ -150,9 +176,13 @@ deleteIngredients(user, recipe) {
   Promise.all(deleteIngredientsFetchArray).then(promises => {
       alert('Ingredients Deleted!');
     }).catch(error => console.log(error.message)) ;
+  } else {
+    alert('You don\'t have enough ingredients to cook this meal!')
+  }
 }
 
   addIngredients(user, recipe) {
+  if (!this.canCookMeal(recipe)) {
   const ingredients = this.getItemsNeeded(recipe);
   const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
     console.log(user.id, ingredient.id, ingredient.amountNeeded,  'infoToPostAdd')
@@ -175,8 +205,10 @@ deleteIngredients(user, recipe) {
       alert('Ingredients Added');
     }).catch(error => console.log(error.message)) ;
 }
-
-
+ else {
+  alert('You already have enough ingredients to cook this meal!')
+}
+}
 
 }
 
