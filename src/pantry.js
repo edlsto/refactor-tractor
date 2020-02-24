@@ -1,8 +1,9 @@
-import domUpdates from './domUpdates';
+
 
 class Pantry {
-  constructor(userIngredients) {
+  constructor(userIngredients, ingredientsData) {
     this.contents = userIngredients;
+    this.ingredientsData = ingredientsData;
   }
 
   findInPantry(recipeItemId) {
@@ -35,29 +36,35 @@ class Pantry {
     return true;
   }
 
-  // displayCanCookMealinDOM(event, cookbook) {
-  //   domUpdates.displayDirections(event, cookbook)
-  // }
-
   cookMeal(recipe) {
-    if (this.canCookMeal(recipe)) {
-      this.contents = this.contents.map(pantryItem => {
-        recipe.ingredients.forEach(ingredient => {
-          if (ingredient.id === pantryItem.ingredient) {
-            pantryItem.amount -= ingredient.quantity.amount
-          }
-        })
-        return {
-          ingredient: pantryItem.ingredient,
-          amount: pantryItem.amount
-        }
-      })
-    }
+    console.log(recipe)
+    return recipe.ingredients.map(ingredient => {
+      return {
+        ingredientId: ingredient.id,
+        amountInRecipe: ingredient.quantity.amount
+      }
+    })
+    // if (this.canCookMeal(recipe)) {
+      // const recipeIngredientss = this.contents.map(pantryItem => {
+      //   recipe.ingredients.forEach(ingredient => {
+      //     if (ingredient.id === pantryItem.ingredient) {
+      //       pantryItem.amount -= ingredient.quantity.amount
+      //     }
+      //   })
+      //   return {
+      //     ingredient: pantryItem.ingredient,
+      //     amountNeeded: ingredient.quantity.amount,
+      //     id: pantryItem.id
+      //   }
+      // })
+      // console.log(recipeIngredientss, '1')
+      // return recipeIngredientss
+    // }
+
   }
 
   getItemsNeeded(recipe) {
     if (!this.canCookMeal(recipe)) {
-      console.log(recipe)
       let itemsNeeded = recipe.ingredients.filter(recipeIngredient => {
         let pantryItem = this.findInPantry(recipeIngredient.id)
 
@@ -87,26 +94,9 @@ class Pantry {
         }
 
       })
-      // console.log(recipe.ingredientsData)
-      // console.log(itemsNeeded)
-      // itemsNeeded = itemsNeeded.map(item => {
-      //
-      //   let ingredientDetails = recipe.ingredientsData.find(ingredient => {
-      //     return ingredient.id === item.id
-      //   })
-      //   console.log(ingredientDetails)
-      //   // console.log(recipe)
-      //     return {
-      //       name: ingredientDetails.name,
-      //       quantityNeededInRecipe: item.quantity.amount,
-      //       id: item.id,
-      //       cost: this.getCost(item, item.quantity.amount, recipe)
-      //     }
-      // })
       return itemsNeeded
     }
   }
-
 
   getCost(item, amount, recipe) {
     return recipe.ingredients.find(ingredient => {
@@ -122,56 +112,74 @@ class Pantry {
     }, 0)
   }
 
-getIngredientById() {
-  this.getItemsNeeded(recipe).map((ingredient) => {
-    return ingredient.id
+// map over
+
+getIngredientById(recipe) {
+  console.log(this.cookMeal(recipe), 'fn-call')
+  return this.cookMeal(recipe).map((ingredient) => {
+    return ingredient.ingredientId
   })
 }
 
-getIngredientModification() {
-  this.getItemsNeeded(recipe).map((ingredient) => {
+getIngredientModification(recipe) {
+  this.cookMeal(recipe).map((ingredient) => {
     return ingredient.amountNeeded
 })
 }
 
-deleteIngredient(user) {
-  fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData'), {
-      method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "userID": user.id,
-        "ingredientID": this.getIngredientById(),
-        "ingredientModification": this.getIngredientModification()
+deleteIngredients(user, recipe) {
+  const ingredients = this.cookMeal(recipe);
+  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+    console.log(user.id, ingredient.ingredientId, -Math.abs(ingredient.amountInRecipe),  'infoToPost')
+    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "userID": user.id,
+          "ingredientID": ingredient.ingredientId,
+          "ingredientModification": -Math.abs(ingredient.amountInRecipe)
       })
-    }).then(() => {
-      alert('Ingredient Deleted!');
-    }).catch(() => alert('Delete failed to happen'));
+    }).then(response => response.json())
+    .then(json => console.log(json))
+    .catch(error => console.log(error.message))
+
+  })
+  console.log(deleteIngredientsFetchArray, '2')
+  Promise.all(deleteIngredientsFetchArray).then(promises => {
+      alert('Ingredients Deleted!');
+    }).catch(error => console.log(error.message)) ;
 }
 
-postIngredient(user) {
-    fetch('https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/ingredients/ingredientsData'), {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "userID": user.id,
-        "ingredientID": this.getIngredientById(),
-        "ingredientModification": this.getIngredientModification()
+  addIngredients(user, recipe) {
+  const ingredients = this.getItemsNeeded(recipe);
+  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+    console.log(user.id, ingredient.id, ingredient.amountNeeded,  'infoToPostAdd')
+    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "userID": user.id,
+          "ingredientID": ingredient.id,
+          "ingredientModification": ingredient.amountNeeded
       })
-    }).then(() => {
-      alert('Ingredient Added!');
-    }).catch(() => alert('Adding ingredient failed to happen'));
+    }).then(response => response.json())
+    .then(json => console.log(json))
+    .catch(error => console.log(error.message))
+
+  })
+  console.log(deleteIngredientsFetchArray, '2')
+  Promise.all(deleteIngredientsFetchArray).then(promises => {
+      alert('Ingredients Added');
+    }).catch(error => console.log(error.message)) ;
 }
 
+
+
 }
-
-
-
-
-
 
 
 export default Pantry;
