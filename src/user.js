@@ -34,11 +34,12 @@ class User {
 
   findFavorites(strgToSrch) {
     return this.favoriteRecipes.filter(recipe => {
-      // console.log(recipe.name.toUpperCase())git commit -m ""
       return recipe.name.includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
-        console.log(ingredient)
-        return ingredient.name.includes(strgToSrch)
+        let ingredientName = this.pantry.ingredientsData.find((element) => {
+           return element.id === ingredient.id;
+        })
+        return ingredientName.name.includes(strgToSrch);
       });
     });
   }
