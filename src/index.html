@@ -11,15 +11,15 @@
       <label for='home-button' class='hidden'>Homepage button</label>
       <button id='home-button' class='home navButton'>Home</button>
       <label for='view-favorites-button' class='hidden'>View favorites</label>
-      <label for='search-bar' class='hidden'>Search input is located here
-      <form class='search-bar'>
+      <label for='search-bar'>
+      <section class='search-bar'>
         <label for='search-button' class='hidden'>Click here to search here</label>
         <button id='search-button' class='search-button'>
           <img class='search-image' src='https://image.flaticon.com/icons/svg/660/660029.svg' alt='Search button'>
         </button>
         <label for='search-input' class='hidden'>Type search query here</label>
         <input id='search-input' class='search-input' type='text' placeholder='Search recipes by name or ingredients' value=''>
-      </form>
+      </section>
       </label>
     </header>
     <main>
@@ -27,6 +27,7 @@
         <p class='user-info'>Welcome, <span class='user-name'>User</span>.</p>
         <button id='view-favorites-button' class=' view-favorites navButton'>View Favorites</button>
         <button id='view-to-cook-button' class='view-to-cook navButton'>View Recipes To Cook</button>
+        <p>Click below to filter recipes by type:</p>
         <form id="checklist">
           <input type="checkbox" name="antipasti" value="antipasti">
           <label for="antipasti">Antipasti</li></label><br/>

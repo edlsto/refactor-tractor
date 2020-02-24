@@ -85,10 +85,13 @@ getFavorites(user) {
 	},
 
 	searchByName(user) {
-	  let results = user.cookbook.findRecipeByName(headerSearch.val())
-	  if(results !== undefined) {
-	    this.populateCards(user, results)
-	  }
+		let results = user.cookbook.findRecipeByName(headerSearch.val());
+		if (cardArea.hasClass('favorites')) {
+			results = user.findFavorites(headerSearch.val());
+		} else if (cardArea.hasClass('to-cook')) {
+			results = user.findRecipeToCook(headerSearch.val());
+		}
+			this.populateCards(user, results)
 	},
 
 	closeRecipe(user) {
@@ -98,15 +101,29 @@ getFavorites(user) {
 	},
 
 	filterRecipes(user, selected) {
-
-		const filteredRecipes = user.cookbook.recipes.filter(recipe => {
+		console.log(selected)
+		let recipesToFilter = user.cookbook.recipes;
+		if(cardArea.hasClass('favorites')) {
+			recipesToFilter = user.favoriteRecipes
+		} else if (cardArea.hasClass('to-cook')) {
+			recipesToFilter = user.recipesToCook;
+		}
+		if(selected.length === 0) {
+			console.log(recipesToFilter)
+			this.populateCards(user, recipesToFilter)
+			return
+		}
+		const filteredRecipes = recipesToFilter.filter(recipe => {
 			return recipe.tags.find(tag => {
 				return selected.includes(tag)
 			})
 		})
 		if (filteredRecipes.length) {
 			this.populateCards(user, filteredRecipes)
-		} else {
+		} else if ((cardArea.hasClass('favorites') || cardArea.hasClass('to-cook'))&& !filteredRecipes.length) {
+			this.populateCards(user, []);
+		}
+		else {
 			this.populateCards(user)
 		}
 	},
@@ -211,6 +228,7 @@ getFavorites(user) {
 	  } else {
 	    favButton.html('Refresh Favorites');
 	    cardArea.html('');
+			cardArea.addClass('favorites');
 	    user.favoriteRecipes.forEach(recipe => {
 	      cardArea.prepend(`<div id='${recipe.id}'
 	      class='card'>
@@ -252,6 +270,7 @@ getFavorites(user) {
 	} else {
 		viewToCookButton.html('Refresh Recipes to Cook');
 		cardArea.html('');
+		cardArea.addClass('to-cook');
 		user.recipesToCook.forEach(recipe => {
 			cardArea.prepend(`<div id='${recipe.id}'
 			class='card'>
