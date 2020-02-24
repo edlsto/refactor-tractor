@@ -84,12 +84,6 @@ getFavorites(user) {
 	  userName.html(user.name.split(' ')[0] + ' ' + user.name.split(' ')[1][0]);
 	},
 
-	// searchByName(user) {
-	//   let results = user.cookbook.findRecipeByName(headerSearch.val())
-	//   if(results !== undefined) {
-	//     this.populateCards(user, results)
-	//   }
-	// },
 	searchByName(user) {
 		let results = user.cookbook.findRecipeByName(headerSearch.val());
 		if (cardArea.hasClass('favorites')) {
@@ -107,15 +101,29 @@ getFavorites(user) {
 	},
 
 	filterRecipes(user, selected) {
-
-		const filteredRecipes = user.cookbook.recipes.filter(recipe => {
+		console.log(selected)
+		let recipesToFilter = user.cookbook.recipes;
+		if(cardArea.hasClass('favorites')) {
+			recipesToFilter = user.favoriteRecipes
+		} else if (cardArea.hasClass('to-cook')) {
+			recipesToFilter = user.recipesToCook;
+		}
+		if(selected.length === 0) {
+			console.log(recipesToFilter)
+			this.populateCards(user, recipesToFilter)
+			return
+		}
+		const filteredRecipes = recipesToFilter.filter(recipe => {
 			return recipe.tags.find(tag => {
 				return selected.includes(tag)
 			})
 		})
 		if (filteredRecipes.length) {
 			this.populateCards(user, filteredRecipes)
-		} else {
+		} else if ((cardArea.hasClass('favorites') || cardArea.hasClass('to-cook'))&& !filteredRecipes.length) {
+			this.populateCards(user, []);
+		}
+		else {
 			this.populateCards(user)
 		}
 	},
