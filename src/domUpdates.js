@@ -84,11 +84,25 @@ getFavorites(user) {
 	  userName.html(user.name.split(' ')[0] + ' ' + user.name.split(' ')[1][0]);
 	},
 
+	// searchByName(user) {
+	//   let results = user.cookbook.findRecipeByName(headerSearch.val())
+	//   if(results !== undefined) {
+	//     this.populateCards(user, results)
+	//   }
+	// },
 	searchByName(user) {
-	  let results = user.cookbook.findRecipeByName(headerSearch.val())
-	  if(results !== undefined) {
-	    this.populateCards(user, results)
-	  }
+		if (cardArea.hasClass('favorites')) {
+			console.log(user);
+			let results = user.findFavorites(headerSearch.val());
+			if(results !== undefined) {
+				this.populateCards(user, results)
+				}
+		} else {
+			let results = user.cookbook.findRecipeByName(headerSearch.val())
+			if(results !== undefined) {
+				this.populateCards(user, results)
+				}
+	  	}
 	},
 
 	closeRecipe(user) {
@@ -196,6 +210,7 @@ getFavorites(user) {
 	  } else {
 	    favButton.html('Refresh Favorites');
 	    cardArea.html('');
+			cardArea.addClass('favorites');
 	    user.favoriteRecipes.forEach(recipe => {
 	      cardArea.prepend(`<div id='${recipe.id}'
 	      class='card'>
