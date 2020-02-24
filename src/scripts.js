@@ -36,8 +36,7 @@ function getData(type) {
 }
 
 function onStartup(recipes, ingredients, users) {
-	  // let userId = (Math.floor(Math.random() * 49) + 1)
-    let userId = 2;
+	  let userId = (Math.floor(Math.random() * 49) + 1)
 	  let newUser = users.find(user => {
 	    return user.id === Number(userId);
 	  });

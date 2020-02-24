@@ -171,7 +171,6 @@ deleteIngredients(user, recipe) {
     .catch(error => console.log(error.message))
 
   })
-  console.log(deleteIngredientsFetchArray, '2')
   Promise.all(deleteIngredientsFetchArray).then(promises => {
       alert('Ingredients Added');
     }).catch(error => console.log(error.message)) ;
