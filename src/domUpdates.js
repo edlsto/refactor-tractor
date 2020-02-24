@@ -10,12 +10,13 @@ let cardArea = $('.all-cards');
 let headerSearch = $('#search-input');
 let searchText = headerSearch.val();
 let viewToCookButton = $('#view-to-cook-button');
+let postButton = $('.post-button');
+let deleteButton = $('.delete-button');
 
 let domUpdates = {
 
 	updateRecipesToCook(event, user) {
 		let specificRecipe = user.cookbook.recipes.find(recipe => {
-			console.log(event.target.id);
 			return recipe.id  === Number(event.target.id)
 		})
 		if (!$(event.target).hasClass('add-active')) {
@@ -28,7 +29,6 @@ let domUpdates = {
 	},
 
 	 getRecipesToCook(user) {
-		 console.log('hi')
   if (user.recipesToCook.length) {
     user.recipesToCook.forEach(recipe => {
       $(`.add${recipe.id}`).addClass('add-active')
@@ -70,8 +70,6 @@ getFavorites(user) {
 	          src='${recipe.image}' alt='click to view recipe for ${recipe.name}'>
 	    </div>`)
 			if (user) {
-			console.log(
-			)
 		}
 	  })
 	  this.getFavorites(user);
@@ -100,7 +98,6 @@ getFavorites(user) {
 	},
 
 	displayDirections(event, user) {
-		console.log(user)
 	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
@@ -134,7 +131,13 @@ getFavorites(user) {
 		  <p>Instructions: </p><ol><span class='instructions recipe-info'>
 		  </span></ol>
 		  </div>
-		</div>`);
+		</div>
+
+		<div class='post-delete-buttons'>
+	 <button id= aria-label='post-button' class='post-button'>'get-ingredients'</button>
+	 <button id= aria-label='delete-button' class='delete-button'> 'cook-recipe' </button>
+	 </div>
+		`);
 		let alert = $('.alert')
 		const upperCase = (word) => {
 			let letters = word.split('');
@@ -224,7 +227,6 @@ getFavorites(user) {
 	},
 
 	viewRecipesToCook(event, user) {
-		console.log(user)
 	if (cardArea.hasClass('all')) {
     cardArea.removeClass('all')
   }
@@ -235,7 +237,6 @@ getFavorites(user) {
 	} else {
 		viewToCookButton.html('Refresh Recipes to Cook');
 		cardArea.html('');
-		console.log(user.recipesToCook);
 		user.recipesToCook.forEach(recipe => {
 			cardArea.prepend(`<div id='${recipe.id}'
 			class='card'>

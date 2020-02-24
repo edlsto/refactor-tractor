@@ -16,6 +16,8 @@ let viewToCookButton = $('#view-to-cook-button');
 let recipes = getData('recipes/recipeData');
 let ingredients = getData('ingredients/ingredientsData');
 let userss = getData('users/wcUsersData');
+let postButton = $('.post-button');
+let deleteButton = $('.delete-button');
 
 Promise.all([recipes, ingredients, userss]).then(promises => {
   recipes = promises[0];
@@ -54,7 +56,23 @@ function onStartup(recipes, ingredients, users) {
 			if ($(event.target).hasClass('close-btn')) {
 				domUpdates.closeRecipe(user)
 			}
+      if ($(event.target).hasClass('delete-button')) {
+        const recipeId = $(event.target).parent().prev().prev()[0].id;
+        const currentRecipe = user.cookbook.recipes.find(recipe => {
+          return recipe.id === Number(recipeId);
+        })
+				user.pantry.deleteIngredients(user, currentRecipe);
+			}
+      if ($(event.target).hasClass('post-button')) {
+        const recipeId = $(event.target).parent().prev().prev()[0].id;
+        const currentRecipe = user.cookbook.recipes.find(recipe => {
+          return recipe.id === Number(recipeId);
+        })
+				user.pantry.addIngredients(user, currentRecipe);
+			}
 		});
 		viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
+    // let postButton.on('click', () => '')
+    // deleteButton.on('click', () => pantry.deleteIngredients(event, user));
 
 	}

@@ -1,4 +1,5 @@
 
+
 class Pantry {
   constructor(userIngredients, ingredientsData) {
     this.contents = userIngredients;
@@ -36,19 +37,30 @@ class Pantry {
   }
 
   cookMeal(recipe) {
-    if (this.canCookMeal(recipe)) {
-      this.contents = this.contents.map(pantryItem => {
-        recipe.ingredients.forEach(ingredient => {
-          if (ingredient.id === pantryItem.ingredient) {
-            pantryItem.amount -= ingredient.quantity.amount
-          }
-        })
-        return {
-          ingredient: pantryItem.ingredient,
-          amount: pantryItem.amount
-        }
-      })
-    }
+    console.log(recipe)
+    return recipe.ingredients.map(ingredient => {
+      return {
+        ingredientId: ingredient.id,
+        amountInRecipe: ingredient.quantity.amount
+      }
+    })
+    // if (this.canCookMeal(recipe)) {
+      // const recipeIngredientss = this.contents.map(pantryItem => {
+      //   recipe.ingredients.forEach(ingredient => {
+      //     if (ingredient.id === pantryItem.ingredient) {
+      //       pantryItem.amount -= ingredient.quantity.amount
+      //     }
+      //   })
+      //   return {
+      //     ingredient: pantryItem.ingredient,
+      //     amountNeeded: ingredient.quantity.amount,
+      //     id: pantryItem.id
+      //   }
+      // })
+      // console.log(recipeIngredientss, '1')
+      // return recipeIngredientss
+    // }
+
   }
 
   getItemsNeeded(recipe) {
@@ -100,6 +112,73 @@ class Pantry {
     }, 0)
   }
 
+// map over
+
+getIngredientById(recipe) {
+  console.log(this.cookMeal(recipe), 'fn-call')
+  return this.cookMeal(recipe).map((ingredient) => {
+    return ingredient.ingredientId
+  })
 }
+
+getIngredientModification(recipe) {
+  this.cookMeal(recipe).map((ingredient) => {
+    return ingredient.amountNeeded
+})
+}
+
+deleteIngredients(user, recipe) {
+  const ingredients = this.cookMeal(recipe);
+  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+    console.log(user.id, ingredient.ingredientId, -Math.abs(ingredient.amountInRecipe),  'infoToPost')
+    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "userID": user.id,
+          "ingredientID": ingredient.ingredientId,
+          "ingredientModification": -Math.abs(ingredient.amountInRecipe)
+      })
+    }).then(response => response.json())
+    .then(json => console.log(json))
+    .catch(error => console.log(error.message))
+
+  })
+  console.log(deleteIngredientsFetchArray, '2')
+  Promise.all(deleteIngredientsFetchArray).then(promises => {
+      alert('Ingredients Deleted!');
+    }).catch(error => console.log(error.message)) ;
+}
+
+  addIngredients(user, recipe) {
+  const ingredients = this.getItemsNeeded(recipe);
+  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+    console.log(user.id, ingredient.id, ingredient.amountNeeded,  'infoToPostAdd')
+    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "userID": user.id,
+          "ingredientID": ingredient.id,
+          "ingredientModification": ingredient.amountNeeded
+      })
+    }).then(response => response.json())
+    .then(json => console.log(json))
+    .catch(error => console.log(error.message))
+
+  })
+  Promise.all(deleteIngredientsFetchArray).then(promises => {
+      alert('Ingredients Added');
+    }).catch(error => console.log(error.message)) ;
+}
+
+
+
+}
+
 
 export default Pantry;
