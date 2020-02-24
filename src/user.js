@@ -33,19 +33,18 @@ class User {
   }
 
   findFavorites(strgToSrch) {
+    strgToSrch = strgToSrch.toLowerCase();
     return this.favoriteRecipes.filter(recipe => {
-      return recipe.name.includes(strgToSrch)
+      return recipe.name.toLowerCase().includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
-        return ingredient.name.includes(strgToSrch)
+        let ingredientName = this.pantry.ingredientsData.find((element) => {
+           return element.id === ingredient.id;
+        })
+        return ingredientName.name.includes(strgToSrch);
       });
     });
   }
 
-  // checkPantry(recipeIngredients) {
-  //   recipeIngredients.forEach((ingredient) => {
-  //     if(this.pantry.includes(ingredient.id && ingredient.quantity.amount))
-  //   });
-  // }
   addRecipesToCook(recipe) {
     if (!this.recipesToCook.includes(recipe)) {
       this.recipesToCook.push(recipe)
@@ -63,14 +62,20 @@ class User {
     });
   }
 
+
   findRecipeToCook(strgToSrch) {
+    strgToSrch = strgToSrch.toLowerCase();
     return this.recipesToCook.filter(recipe => {
-      return recipe.name.includes(strgToSrch)
+      console.log(recipe.name);
+      return recipe.name.toLowerCase().includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
-        return ingredient.name.includes(strgToSrch)
-      });
+        let ingredientName = this.pantry.ingredientsData.find((element) => {
+           return element.id === ingredient.id;
+        });
+        return ingredientName.name.includes(strgToSrch)
     });
-  }
+  });
+ }
 }
 
 
