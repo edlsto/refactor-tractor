@@ -18,6 +18,7 @@ let ingredients = getData('ingredients/ingredientsData');
 let userss = getData('users/wcUsersData');
 let postButton = $('.post-button');
 let deleteButton = $('.delete-button');
+let checklist = $('#checklist')
 
 Promise.all([recipes, ingredients, userss]).then(promises => {
   recipes = promises[0];
@@ -52,6 +53,15 @@ function onStartup(recipes, ingredients, users) {
 			domUpdates.populateCards(user)
 		})
 		favButton.on('click', () => domUpdates.viewFavorites(user));
+
+    checklist.on('click', () => {
+      let selected = [];
+      $('#checklist input:checked').each(function() {
+        selected.push($(this).attr('name'));
+      });
+      console.log(selected)
+      domUpdates.filterRecipes(user, selected)
+    })
 		cardArea.on('click', () => {
 			if ($(event.target).hasClass('close-btn')) {
 				domUpdates.closeRecipe(user)
