@@ -91,18 +91,13 @@ getFavorites(user) {
 	//   }
 	// },
 	searchByName(user) {
+		let results = user.cookbook.findRecipeByName(headerSearch.val());
 		if (cardArea.hasClass('favorites')) {
-			console.log(user);
-			let results = user.findFavorites(headerSearch.val());
-			if(results !== undefined) {
-				this.populateCards(user, results)
-				}
-		} else {
-			let results = user.cookbook.findRecipeByName(headerSearch.val())
-			if(results !== undefined) {
-				this.populateCards(user, results)
-				}
-	  	}
+			results = user.findFavorites(headerSearch.val());
+		} else if (cardArea.hasClass('to-cook')) {
+			results = user.findRecipeToCook(headerSearch.val());
+		}
+			this.populateCards(user, results)
 	},
 
 	closeRecipe(user) {
@@ -267,6 +262,7 @@ getFavorites(user) {
 	} else {
 		viewToCookButton.html('Refresh Recipes to Cook');
 		cardArea.html('');
+		cardArea.addClass('to-cook');
 		user.recipesToCook.forEach(recipe => {
 			cardArea.prepend(`<div id='${recipe.id}'
 			class='card'>
