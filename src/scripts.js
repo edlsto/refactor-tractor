@@ -42,25 +42,24 @@ function onStartup(recipes, ingredients, users) {
 	    return user.id === Number(userId);
 	  });
 	  const user = new User(userId, newUser.name, newUser.pantry, recipes, ingredients)
-	  domUpdates.populateCards(user);
+	  user.populateCards();
 	  domUpdates.greetUser(user);
 
 		//Event listeners
-		headerSearch.on('keyup', () => domUpdates.searchByName(user))
+		headerSearch.on('keyup', () => user.searchByName())
 		cardArea.on('click', () => domUpdates.cardButtonConditionals(event, user));
 		homeButton.on('click', () => {
 			favButton.html('View Favorites');
-			domUpdates.populateCards(user)
+			user.populateCards()
 		})
-		favButton.on('click', () => domUpdates.viewFavorites(user));
+		favButton.on('click', () => user.viewFavorites());
 
     checklist.on('click', () => {
       let selected = [];
       $('#checklist input:checked').each(function() {
         selected.push($(this).attr('name'));
       });
-      console.log(selected)
-      domUpdates.filterRecipes(user, selected)
+      user.filterRecipes(selected)
     })
 		cardArea.on('click', () => {
 			if ($(event.target).hasClass('close-btn')) {
@@ -81,7 +80,7 @@ function onStartup(recipes, ingredients, users) {
 				user.pantry.addIngredients(user, currentRecipe);
 			}
 		});
-		viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
+		viewToCookButton.on('click', () => user.viewRecipesToCook(event));
     // let postButton.on('click', () => '')
     // deleteButton.on('click', () => pantry.deleteIngredients(event, user));
 

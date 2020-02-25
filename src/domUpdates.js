@@ -4,14 +4,6 @@ import User from './user';
 import Cookbook from './cookbook';
 import $ from 'jquery';
 
-let favButton = $('.view-favorites');
-let homeButton = $('.home')
-let cardArea = $('.all-cards');
-let headerSearch = $('#search-input');
-let searchText = headerSearch.val();
-let viewToCookButton = $('#view-to-cook-button');
-let postButton = $('.post-button');
-let deleteButton = $('.delete-button');
 
 let domUpdates = {
 
@@ -45,6 +37,7 @@ getFavorites(user) {
 },
 
 	populateCards(user, recipes = user.cookbook.recipes) {
+		let cardArea = $('.all-cards');
 	  cardArea.html('');
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
@@ -85,6 +78,8 @@ getFavorites(user) {
 	},
 
 	searchByName(user) {
+		let headerSearch = $('#search-input');
+		let cardArea = $('.all-cards');
 		let results = user.cookbook.findRecipeByName(headerSearch.val());
 		if (cardArea.hasClass('favorites')) {
 			results = user.findFavorites(headerSearch.val());
@@ -95,12 +90,14 @@ getFavorites(user) {
 	},
 
 	closeRecipe(user) {
+		let cardArea = $('.all-cards');
 		this.populateCards(user)
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
 	},
 
 	filterRecipes(user, selected) {
+		let cardArea = $('.all-cards');
 		console.log(selected)
 		let recipesToFilter = user.cookbook.recipes;
 		if(cardArea.hasClass('favorites')) {
@@ -129,6 +126,7 @@ getFavorites(user) {
 	},
 
 	displayDirections(event, user) {
+		let cardArea = $('.all-cards');
 	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
@@ -200,6 +198,7 @@ getFavorites(user) {
 	},
 
  favoriteCard(event, user) {
+	 let favButton = $('.view-favorites');
 	  let specificRecipe = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id  === Number(event.target.id)) {
 	      return recipe;
@@ -218,6 +217,7 @@ getFavorites(user) {
 
 
 	viewFavorites(user) {
+		let cardArea = $('.all-cards');
 	  if (cardArea.hasClass('all')) {
 	    cardArea.removeClass('all')
 	  }
@@ -260,6 +260,8 @@ getFavorites(user) {
 	},
 
 	viewRecipesToCook(event, user) {
+		let viewToCookButton = $('#view-to-cook-button');
+		let cardArea = $('.all-cards');
 	if (cardArea.hasClass('all')) {
     cardArea.removeClass('all')
   }
