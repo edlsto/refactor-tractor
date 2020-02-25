@@ -1,5 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
+const spies = require('chai-spies');
+chai.use(spies);
 
 import User from '../src/user';
 import Pantry from '../src/pantry'
@@ -8,7 +10,9 @@ import data from '../src/data/users.js'
 import ingredientsData from '../src/data/ingredients.js'
 import recipeData from '../src/data/recipes.js'
 import Recipe from '../src/recipe.js'
+
 let user1, pantry;
+
 
 let recipes = {
   recipeData: [
@@ -71,6 +75,11 @@ tags: [
 ]
 }
 
+
+
+
+
+
 describe('Pantry (using sample data)', function() {
   beforeEach(() => {
     user1 = new User(1, 'Boba', [
@@ -89,15 +98,20 @@ describe('Pantry (using sample data)', function() {
       recipes,
       {ingredientsData: [{id: 1009016, name: "apple cider", estimatedCostInCents: 468}, {id: 9003, name: "apple", estimatedCostInCents: 207}, {id: 93760, name: "Whole Grain Teff Flour", estimatedCostInCents: 539}, {id: 1123, name: "eggs", estimatedCostInCents: 472
     },{
-id: 20081,
-name: "wheat flour",
-estimatedCostInCents: 142
-},{
-id: 18372,
-name: "bicarbonate of soda",
-estimatedCostInCents: 582
-}]}
+    id: 20081,
+    name: "wheat flour",
+    estimatedCostInCents: 142
+    },{
+    id: 18372,
+    name: "bicarbonate of soda",
+    estimatedCostInCents: 582
+    }]}
     );
+  });
+
+  afterEach(() => {
+    // chai.spy.restore()
+    // chai.spy.on(user1.pantry, 'addIngredients', () => {})
   });
 
   it('should be a function', function() {
@@ -197,10 +211,28 @@ estimatedCostInCents: 582
   })
 
   it('should be able to add items to pantry', function() {
-    let recipe2 = new Recipe(recipeData[2], ingredientsData)
     expect(user1.pantry.contents[0].amount).to.equal(2)
     user1.pantry.addToPantry(1009016, 3)
     expect(user1.pantry.contents[0].amount).to.equal(5)
 
   })
+
+  it ('should be able to add items to pantry', () => {
+    chai.spy.on(user1.pantry, 'addIngredients', () => {})
+    let recipe2 = recipes.recipeData[0]
+    user1.pantry.addIngredients(user1, recipe2)
+    expect(user1.pantry.addIngredients).to.have.been.called(1);
+    expect(user1.pantry.addIngredients).to.have.been.called.with(user1, recipe2);
+  });
+
+  it ('should be able to remove items from pantry', () => {
+    chai.spy.on(user1.pantry, 'deleteIngredients', () => {})
+    let recipe2 = recipes.recipeData[0]
+    user1.pantry.deleteIngredients(user1, recipe2)
+    expect(user1.pantry.deleteIngredients).to.have.been.called(1);
+    expect(user1.pantry.deleteIngredients).to.have.been.called.with(user1, recipe2);
+  });
+
+
+
 })
