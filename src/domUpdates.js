@@ -129,6 +129,7 @@ getFavorites(user) {
 	},
 
 	displayDirections(event, user) {
+		debugger
 	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
@@ -250,10 +251,13 @@ getFavorites(user) {
 	  }
 	},
 	cardButtonConditionals(event, user) {
+		console.log('cardButtonConditionals')
 		if(this.checkKeyboardEvent(event) === true) {
+					console.log('inside');
 			if ($(event.target).hasClass('favorite')) {
 			  this.favoriteCard(event, user);
 		  } else if ($(event.target).hasClass('card-picture')) {
+				debugger
 			  this.displayDirections(event, user);
 		  } else if ($(event.target).hasClass('add')) {
 		    this.updateRecipesToCook(event.target, user);
@@ -264,16 +268,21 @@ getFavorites(user) {
 	},
 
 	checkKeyboardEvent(event) {
+		let validated
 		if(event.type === 'click') {
-			return true;
+			validated = true;
+			// return true;
 		} else if(event.type === 'keypress') {
 			let code = event.charCode || event.keyCode;
 			if((code === 32) || (code === 13)) {
-				return true;
+				event.preventDefault();
+				validated = true;
+						debugger
 			}
 		} else {
-			return false;
+			validated = false;
 		}
+		return validated;
 	},
 
 	viewRecipesToCook(event, user) {
