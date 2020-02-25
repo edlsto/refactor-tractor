@@ -15,15 +15,15 @@ let deleteButton = $('.delete-button');
 
 let domUpdates = {
 
-	updateRecipesToCook(event, user) {
+	updateRecipesToCook(target, user) {
 		let specificRecipe = user.cookbook.recipes.find(recipe => {
-			return recipe.id  === Number(event.target.id)
+			return recipe.id  === Number(target.id)
 		})
-		if (!$(event.target).hasClass('add-active')) {
-			$(event.target).addClass('add-active');
+		if (!$(target).hasClass('add-active')) {
+			$(target).addClass('add-active');
 			user.addRecipesToCook(specificRecipe);
-		} else if ($(event.target).hasClass('add-active')) {
-			$(event.target).removeClass('add-active');
+		} else if ($(target).hasClass('add-active')) {
+			$(target).removeClass('add-active');
 			user.removeFromRecipesToCook(specificRecipe);
 		}
 	},
@@ -250,13 +250,30 @@ getFavorites(user) {
 	  }
 	},
 	cardButtonConditionals(event, user) {
-		 if ($(event.target).hasClass('favorite')) {
-			this.favoriteCard(event, user);
-		} else if ($(event.target).hasClass('card-picture')) {
-			this.displayDirections(event, user);
-		} else if ($(event.target).hasClass('add')) {
-		this.updateRecipesToCook(event, user);
-	}
+		if(this.checkKeyboardEvent(event) === true) {
+			if ($(event.target).hasClass('favorite')) {
+			  this.favoriteCard(event, user);
+		  } else if ($(event.target).hasClass('card-picture')) {
+			  this.displayDirections(event, user);
+		  } else if ($(event.target).hasClass('add')) {
+		    this.updateRecipesToCook(event.target, user);
+	 		} else if ($(event.target).hasClass('add-button')) {
+				this.updateRecipesToCook($(event.target).children()[0], user);
+			}
+		}
+	},
+
+	checkKeyboardEvent(event) {
+		if(event.type === 'click') {
+			return true;
+		} else if(event.type === 'keypress') {
+			let code = event.charCode || event.keyCode;
+			if((code === 32) || (code === 13)) {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	},
 
 	viewRecipesToCook(event, user) {
