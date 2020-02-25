@@ -47,11 +47,7 @@ function onStartup(recipes, ingredients, users) {
 
 		//Event listeners
 		headerSearch.on('keyup', () => domUpdates.searchByName(user))
-		cardArea.on('click', () => {
-		  domUpdates.cardButtonConditionals(event, user);
-	  })
 		cardArea.on('click keypress', () => {
-			// debugger
 			domUpdates.cardButtonConditionals(event, user);
 	  })
 		homeButton.on('click', () => {
@@ -66,7 +62,6 @@ function onStartup(recipes, ingredients, users) {
       $('#checklist input:checked').each(function() {
         selected.push($(this).attr('name'));
       });
-      console.log(selected)
       domUpdates.filterRecipes(user, selected)
     })
 		cardArea.on('click', () => {
