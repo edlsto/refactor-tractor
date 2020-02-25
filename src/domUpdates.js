@@ -145,7 +145,7 @@ getFavorites(user) {
 		let cookability = user.pantry.canCookMeal(newRecipeInfo) ? 'can' : 'can\'t'
 
 	  cardArea.html(`
-			<div class="close-btn-wrapper"><div class="close-btn">Close recipe</div></div>
+			<div class="close-btn-wrapper"><button class="close-btn" role="exit-recipe" tabindex='1'>Close recipe</button></div>
 			<div class="alert"><div class="can-or-cant-cook"><h3>You ${cookability} cook this meal, based on what's on your pantry!</h3></div>
 		</div>
 
@@ -268,6 +268,7 @@ getFavorites(user) {
 	},
 
 	checkKeyboardEvent(event) {
+		debugger
 		let validated
 		if(event.type === 'click') {
 			validated = true;
