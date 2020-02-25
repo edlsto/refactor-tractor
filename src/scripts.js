@@ -47,12 +47,16 @@ function onStartup(recipes, ingredients, users) {
 
 		//Event listeners
 		headerSearch.on('keyup', () => domUpdates.searchByName(user))
-		cardArea.on('click', () => domUpdates.cardButtonConditionals(event, user));
+		cardArea.on('click', () => {
+		  domUpdates.cardButtonConditionals(event, user);
+	  })
 		homeButton.on('click', () => {
 			favButton.html('View Favorites');
 			domUpdates.populateCards(user)
 		})
 		favButton.on('click', () => domUpdates.viewFavorites(user));
+
+		checklist.on('click keypress', () => domUpdates.checkKeyboardEvent(event));
 
     checklist.on('click', () => {
       let selected = [];
