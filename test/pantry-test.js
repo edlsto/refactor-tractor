@@ -8,12 +8,96 @@ import data from '../src/data/users.js'
 import ingredientsData from '../src/data/ingredients.js'
 import recipeData from '../src/data/recipes.js'
 import Recipe from '../src/recipe.js'
-let user, pantry;
+let user1, pantry;
+
+let recipes = {
+  recipeData: [
+{
+id: 595736,
+image: "https://spoonacular.com/recipeImages/595736-556x370.jpg",
+ingredients: [
+{
+id: 20081,
+quantity: {
+amount: 1.5,
+unit: "c"
+}
+},
+{
+id: 18372,
+quantity: {
+amount: 0.5,
+unit: "tsp"
+}
+},
+],
+name: "Loaded Chocolate Chip Pudding Cookie Cups",
+tags: [
+"antipasti",
+"starter",
+"snack",
+"appetizer",
+"antipasto",
+"hor d'oeuvre"
+]
+},
+{
+id: 678353,
+image: "https://spoonacular.com/recipeImages/678353-556x370.jpg",
+ingredients: [
+{
+id: 1009016,
+quantity: {
+amount: 1.5,
+unit: "cups"
+}
+},
+{
+id: 9003,
+quantity: {
+amount: 2,
+unit: ""
+}
+}
+],
+name: "Maple Dijon Apple Cider Grilled Pork Chops",
+tags: [
+"lunch",
+"main course",
+"main dish",
+"dinner"
+]
+}
+]
+}
 
 describe('Pantry (using sample data)', function() {
-  beforeEach(function() {
-    user = new User(sampleData[0].id, sampleData[0].name, sampleData[0].pantry);
-    pantry = new Pantry(user.pantry)
+  beforeEach(() => {
+    user1 = new User(1, 'Boba', [
+      {
+        'ingredient': 1077,
+        'amount': 1
+      },
+      {
+        'ingredient': 14412,
+        'amount': 1
+      },
+      {
+        'ingredient': 93760,
+        'amount': 3
+      }],
+      recipes,
+      {ingredientsData: [{id: 1009016, name: "apple cider", estimatedCostInCents: 468}, {id: 9003, name: "apple", estimatedCostInCents: 207}, {id: 93760, name: "Whole Grain Teff Flour", estimatedCostInCents: 539}, {id: 1123, name: "eggs", estimatedCostInCents: 472
+    },{
+id: 20081,
+name: "wheat flour",
+estimatedCostInCents: 142
+},{
+id: 18372,
+name: "bicarbonate of soda",
+estimatedCostInCents: 582
+}]}
+    );
   });
 
   it('should be a function', function() {
@@ -21,83 +105,102 @@ describe('Pantry (using sample data)', function() {
   });
 
   it('should be an instance of Pantry', function() {
-    expect(pantry).to.be.an.instanceof(Pantry);
+    expect(user1.pantry).to.be.an.instanceof(Pantry);
   });
 
   it('should create a pantry with ingredients', function() {
-    expect(pantry.contents).to.deep.equal([
-      { ingredient: 11477, amount: 1 },
-      { ingredient: 93820, amount: 1 },
-      { ingredient: 11297, amount: 3 },
-      { ingredient: 11547, amount: 5 },
-      { ingredient: 1082047, amount: 5 }
+    expect(user1.pantry.contents).to.deep.equal([
+      { ingredient: 1077, amount: 1 },
+      { ingredient: 14412, amount: 1 },
+      { ingredient: 93760, amount: 3 }
     ]);
   });
 })
 
-describe('Pantry (using full data)', function() {
-  beforeEach(function() {
-    user = new User(data[1].id, data[1].name, data[1].pantry);
-    pantry = new Pantry(user.pantry)
+describe('Pantry', function() {
+  beforeEach(() => {
+    user1 = new User(1, 'Boba', [
+      {
+        'ingredient': 1009016,
+        'amount': 2
+      },
+      {
+        'ingredient': 9003,
+        'amount': 2
+      },
+      {
+        'ingredient': 93760,
+        'amount': 3
+      }],
+      recipes,
+      {ingredientsData: [{id: 1009016, name: "apple cider", estimatedCostInCents: 468}, {id: 9003, name: "apple", estimatedCostInCents: 207}, {id: 93760, name: "Whole Grain Teff Flour", estimatedCostInCents: 539}, {id: 1123, name: "eggs", estimatedCostInCents: 472
+    },{
+id: 20081,
+name: "wheat flour",
+estimatedCostInCents: 142
+},{
+id: 18372,
+name: "bicarbonate of soda",
+estimatedCostInCents: 582
+}]}
+    );
   });
 
   it('should be able to determine whether it can cook a specific meal', function() {
-    const recipe = new Recipe(recipeData[0], ingredientsData)
-    recipe.ingredients[4].quantity.amount = 2;
-    recipe.ingredients[7].quantity.amount = 2;
-    expect(pantry.canCookMeal(recipe)).to.equal(true)
-    let recipe2 = new Recipe(recipeData[1], ingredientsData)
-    expect(pantry.canCookMeal(recipe2)).to.equal(false)
+    const recipe = recipes.recipeData[1]
+    recipe.ingredients[0].quantity.amount = 2;
+    recipe.ingredients[1].quantity.amount = 2;
+    expect(user1.pantry.canCookMeal(recipe)).to.equal(true)
+    let recipe2 = new Recipe(recipeData[0], user1.pantry.ingredientsData)
+    expect(user1.pantry.canCookMeal(recipe2)).to.equal(false)
 
   })
 
   it('should be able to subtract ingredients from pantry once a meal is cooked', function() {
-     expect(pantry.contents[33].amount).to.equal(4)
+     expect(user1.pantry.contents[2].amount).to.equal(3)
     const recipe = new Recipe(recipeData[0], ingredientsData)
-    pantry.cookMeal(recipe)
-    expect(pantry.contents[33].amount).to.equal(2.5)
+    user1.pantry.cookMeal(recipe)
+    expect(user1.pantry.contents[2].amount).to.equal(3)
 
   })
 
   it('should be able to say what ingredients are needed if not enough in pantry', function() {
-    let recipe2 = new Recipe(recipeData[2], ingredientsData)
-    expect(pantry.getItemsNeeded(recipe2)).to.deep.equal(
+    expect(user1.pantry.getItemsNeeded(recipes.recipeData[0])).to.deep.equal(
       [
-        { name: 'black pepper', quantityNeeded: 3, id: 1002030, cost: 1764 },
-        { name: 'brown sugar', quantityNeeded: 3.5, id: 19334, cost: 4472 },
-        { name: 'canola oil', quantityNeeded: 1, id: 4582, cost: 3228 },
-        { name: 'chicken wings', quantityNeeded: 1, id: 5100, cost: 593 },
-        { name: 'chili powder', quantityNeeded: 3, id: 2009, cost: 1996 },
-        { name: 'garlic powder', quantityNeeded: 4, id: 1022020, cost: 1376 },
-        { name: 'hot sauce', quantityNeeded: 8, id: 6168, cost: 6872 },
-        { name: 'mango', quantityNeeded: 0.5, id: 9176, cost: 212.5 },
-        { name: 'onion powder', quantityNeeded: 4, id: 2026, cost: 2388 },
-        {
-          name: 'seasoning salt',
-          quantityNeeded: 1.5,
-          id: 1042047,
-          cost: 501
-        },
-        {
-          name: 'seasoning salt',
-          quantityNeeded: 4,
-          id: 1042047,
-          cost: 1336
-        }
-      ]
+  {
+    id: 20081,
+    quantityNeededInRecipe: 1.5,
+    quantityInPantry: 0,
+    amountNeeded: 1.5,
+    name: 'wheat flour',
+    costPerItem: 142,
+    costOfWhatsNeededInCents: 213,
+    unit: 'c'
+  },
+  {
+    id: 18372,
+    quantityNeededInRecipe: 0.5,
+    quantityInPantry: 0,
+    amountNeeded: 0.5,
+    name: 'bicarbonate of soda',
+    costPerItem: 582,
+    costOfWhatsNeededInCents: 291,
+    unit: 'tsp'
+  }
+]
     )
   })
 
   it('should be able to calculate how much it will cost to buy the necessary ingredients, based on what’s in the pantry', function() {
-    let recipe2 = new Recipe(recipeData[2], ingredientsData)
-    expect(pantry.getCostOfItemsNeeded(recipe2)).to.equal(24738.5)
+    let recipe2 = recipes.recipeData[0]
+    expect(user1.pantry.getCostOfItemsNeeded(recipe2)).to.equal(504)
   })
 
   it('should be able to add items to pantry', function() {
     let recipe2 = new Recipe(recipeData[2], ingredientsData)
-    expect(pantry.contents[0].amount).to.equal(5)
-    pantry.addToPantry(6150, 3)
-    expect(pantry.contents[0].amount).to.equal(8)
+    expect(user1.pantry.contents[0].amount).to.equal(2)
+    user1.pantry.addToPantry(1009016, 3)
+    expect(user1.pantry.contents[0].amount).to.equal(5)
 
   })
 })
