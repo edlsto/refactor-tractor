@@ -3,7 +3,6 @@ $headers-background: #EBF5EE;
 
 html {
   background-color: $primary-background;
-  border: 2px solid #000;
   height: 100vh;
 }
 
@@ -28,8 +27,7 @@ body {
   border-left: 1px solid #000;
   border-right: 1px solid #000;
   font-size: 130%;
-  margin: 1%;
-  // margin-left: 20%;
+  // margin: 2%;
 }
 
 h1 {
@@ -43,9 +41,7 @@ h1 {
 
 .user-info {
   font-size: 150%;
-  // margin: auto;
   text-align: center;
-  // width: 40%
 }
 
 .search-bar {
@@ -201,6 +197,12 @@ h1 {
   grid-template-columns: repeat(1, 1fr);
   margin-left: 5%;
   margin-top: 10%;
+}
+
+.user-profile
+.navButton {
+  margin: 4%;
+  margin-bottom: 10%;
 }
 
 #checklist {
