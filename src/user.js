@@ -66,7 +66,6 @@ class User {
   findRecipeToCook(strgToSrch) {
     strgToSrch = strgToSrch.toLowerCase();
     return this.recipesToCook.filter(recipe => {
-      console.log(recipe.name);
       return recipe.name.toLowerCase().includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
         let ingredientName = this.pantry.ingredientsData.find((element) => {
