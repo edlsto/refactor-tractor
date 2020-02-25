@@ -4,6 +4,7 @@
     <meta charset='UTF-8'>
     <title>Whats Cookin</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800&display=swap' rel='stylesheet'>
+    <meta name='viewport' content='width=device-width, intitial-scale=1'>
   </head>
   <body>
     <header class='main-header'>
@@ -13,10 +14,10 @@
       <label for='view-favorites-button' class='hidden'>View favorites</label>
       <label for='search-bar'>
       <section class='search-bar'>
-        <label for='search-button' class='hidden'>Click here to search here</label>
-        <button id='search-button' class='search-button'>
-          <img class='search-image' src='https://image.flaticon.com/icons/svg/660/660029.svg' alt='Search button'>
-        </button>
+        <!-- <label for='search-button' class='hidden'>Click here to search here</label>
+        <button id='search-button' class='search-button'> -->
+          <!-- <img class='search-image' src='https://image.flaticon.com/icons/svg/660/660029.svg' alt='Search button'>
+        </button> -->
         <label for='search-input' class='hidden'>Type search query here</label>
         <input id='search-input' class='search-input' type='text' placeholder='Search recipes by name or ingredients' value=''>
       </section>
@@ -27,46 +28,45 @@
         <p class='user-info'>Welcome, <span class='user-name'>User</span>.</p>
         <button id='view-favorites-button' class=' view-favorites navButton'>View Favorites</button>
         <button id='view-to-cook-button' class='view-to-cook navButton'>View Recipes To Cook</button>
-        <p>Click below to filter recipes by type:</p>
-        la
+        <p class ='type-filter'>Click below to filter recipes by type:</p>
         <form id="checklist">
-          <input id="antipasti" type="checkbox" name="antipasti" value="antipasti">
+          <input id="antipasti" class='checkbox' type="checkbox" name="antipasti" value="antipasti">
           <label for="antipasti">Antipasti</li></label><br/>
-          <input id="antipasto" type="checkbox" name="antipasto" value="antipasto">
+          <input id="antipasto" class='checkbox' type="checkbox" name="antipasto" value="antipasto">
           <label for="antipasto">Antipasto</li></label><br/>
-          <input id="appetizer" type="checkbox" name="appetizer" value="appetizer">
+          <input id="appetizer" class='checkbox' type="checkbox" name="appetizer" value="appetizer">
           <label for="appetizer">Appetizer</li></label><br/>
-          <input id="breakfast" type="checkbox" name="breakfast" value="breakfast">
+          <input id="breakfast" class='checkbox' type="checkbox" name="breakfast" value="breakfast">
           <label for="breakfast">Breakfast</li></label><br/>
-          <input id="brunch" type="checkbox" name="brunch" value="brunch">
+          <input id="brunch" class='checkbox' type="checkbox" name="brunch" value="brunch">
           <label for="brunch">Brunch</li></label><br/>
-          <input id="condiment" type="checkbox" name="condiment" value="condiment">
+          <input id="condiment" class='checkbox' type="checkbox" name="condiment" value="condiment">
           <label for="condiment">Condiment</li></label><br/>
-          <input id="dinner" type="checkbox" name="dinner" value="dinner">
+          <input id="dinner" class='checkbox' type="checkbox" name="dinner" value="dinner">
           <label for="dinner">Dinner</li></label><br/>
-          <input id="dip" type="checkbox" name="dip" value="dip">
+          <input id="dip" class='checkbox' type="checkbox" name="dip" value="dip">
           <label for="dip">Dip</li></label><br/>
-          <input id="hor d\'oeuvre" type="checkbox" name="hor d\'oeuvre" value="hor d\'oeuvre">
+          <input id="hor d\'oeuvre" class='checkbox' type="checkbox" name="hor d\'oeuvre" value="hor d\'oeuvre">
           <label for="hor d\'oeuvre">Hor d'oeuvre</li></label><br/>
-          <input id="lunch" type="checkbox" name="lunch" value="lunch">
+          <input id="lunch" class='checkbox' type="checkbox" name="lunch" value="lunch">
           <label for="lunch">Lunch</li></label><br/>
-          <input id="main course" type="checkbox" name="main course" value="main course">
+          <input id="main course" class='checkbox' type="checkbox" name="main course" value="main course">
           <label for="main course">Main course</li></label><br/>
-          <input id="main dish" type="checkbox" name="main dish" value="main dish">
+          <input id="main dish" class='checkbox' type="checkbox" name="main dish" value="main dish">
           <label for="main dish">Main dish</li></label><br/>
-          <input id="morning meal" type="checkbox" name="morning meal" value="morning meal">
+          <input id="morning meal" class='checkbox' type="checkbox" name="morning meal" value="morning meal">
           <label for="morning meal">Morning meal</li></label><br/>
-          <input id="salad" type="checkbox" name="salad" value="salad">
+          <input id="salad" class='checkbox' type="checkbox" name="salad" value="salad">
           <label for="salad">Salad</li></label><br/>
-          <input id="sauce" type="checkbox" name="sauce" value="sauce">
+          <input id="sauce" class='checkbox' type="checkbox" name="sauce" value="sauce">
           <label for="sauce">Sauce</li></label><br/>
-          <input id="side dish" type="checkbox" name="side dish" value="side dish">
+          <input id="side dish" class='checkbox' type="checkbox" name="side dish" value="side dish">
           <label for="side dish">Side dish</li></label><br/>
-          <input id="snack" type="checkbox" name="snack" value="snack">
+          <input id="snack" class='checkbox' type="checkbox" name="snack" value="snack">
           <label for="snack">Snack</li></label><br/>
-          <input id="spread" type="checkbox" name="spread" value="spread">
+          <input id="spread" class='checkbox' type="checkbox" name="spread" value="spread">
           <label for="spread">Spread</li></label><br/>
-          <input id="starter" type="checkbox" name="starter" value="starter">
+          <input id="starter" class='checkbox' type="checkbox" name="starter" value="starter">
           <label for="starter">Starter</li></label>
 
         </form>
