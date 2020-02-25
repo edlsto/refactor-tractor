@@ -201,7 +201,11 @@ h1 {
   grid-template-columns: repeat(1, 1fr);
   margin-left: 5%;
   margin-top: 10%;
-  // padding-left: 5%;
+}
+
+#checklist {
+  margin-left: 10%;
+  text-align:left;
 }
 
 .all-cards {
@@ -269,7 +273,6 @@ h3 {
 }
 
 .recipe-name {
-
   display: block;
   font-size: 150%;
   text-align: center;
@@ -310,18 +313,84 @@ main {
 
 // media queries
 
-@media only screen and (min-width: 1240px) {
+@media only screen and (min-width: 1400px) {
+  .add {
+    align-self: center;
+    width: 75%;
+  }
 
+  .add-button {
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    background-color: #D7F2FE;
+    border: 3px solid #000;
+    height: 375px;
+    width: 90%;
+  }
+
+  #checklist {
+    font-size: 26px;
+  }
+
+  .user-profile {
+    font-size: 2em;
+  }
+
+  input[type=checkbox] {transform: scale(1.5);}
 }
 
-@media only screen and (max-width: 1239px) {
 
+@media only screen and (max-width: 1000px) {
+  .all-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media only screen and (max-width: 800px) {
 
+main {
+  display: grid;
+  grid-template-areas: 'aside cards';
+  grid-template-columns: 3fr 2fr;
 }
 
-@media only screen and (max-width: 420px) {
+  .all-cards {
+    grid-template-columns: repeat(1, 1fr);
+    width: 60vw;
+  }
 
+  .card {
+    width: 75%;
+  }
+
+  .user-profile {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .main-header {
+    align-items: center;
+    font-size: 20px;
+    flex-direction: column;
+  }
+
+  h1 {
+    width: 100%;
+  }
+
+  .search-input {
+    font-size: 67%;
+    height: 7vh;
+    margin-left: 90px;
+    width: 58%;
+  }
+  #home-button {
+    height: 30px;
+    font-size: 12px;
+    width: 60px;
+  }
 }
