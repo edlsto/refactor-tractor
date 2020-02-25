@@ -50,13 +50,16 @@ function onStartup(recipes, ingredients, users) {
 		cardArea.on('click', () => {
 		  domUpdates.cardButtonConditionals(event, user);
 	  })
+		cardArea.on('click keypress', () => {
+			// debugger
+			domUpdates.cardButtonConditionals(event, user);
+	  })
 		homeButton.on('click', () => {
 			favButton.html('View Favorites');
 			domUpdates.populateCards(user)
 		})
 		favButton.on('click', () => domUpdates.viewFavorites(user));
 
-		checklist.on('click keypress', () => domUpdates.checkKeyboardEvent(event));
 
     checklist.on('click', () => {
       let selected = [];
@@ -86,7 +89,4 @@ function onStartup(recipes, ingredients, users) {
 			}
 		});
 		viewToCookButton.on('click', () => domUpdates.viewRecipesToCook(event, user));
-    // let postButton.on('click', () => '')
-    // deleteButton.on('click', () => pantry.deleteIngredients(event, user));
-
 	}
