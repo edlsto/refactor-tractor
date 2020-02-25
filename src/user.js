@@ -1,6 +1,7 @@
 import Pantry from './pantry';
 import Cookbook from './cookbook';
 import Recipe from './recipe'
+import domUpdates from './domUpdates';
 
 class User {
   constructor(id, name, pantry, recipes, ingredients) {
@@ -72,9 +73,30 @@ class User {
            return element.id === ingredient.id;
         });
         return ingredientName.name.includes(strgToSrch)
+      });
     });
-  });
- }
+  }
+
+  populateCards() {
+   domUpdates.populateCards(this)
+  }
+
+  searchByName() {
+   domUpdates.searchByName(this)
+  }
+
+  viewFavorites() {
+    domUpdates.viewFavorites(this)
+  }
+
+  filterRecipes(selected) {
+    domUpdates.filterRecipes(this, selected)
+  }
+
+  viewRecipesToCook(event) {
+    domUpdates.viewRecipesToCook(event, this)
+  }
+
 }
 
 
