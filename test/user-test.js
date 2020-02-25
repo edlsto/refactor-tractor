@@ -1,66 +1,72 @@
-import { expect } from 'chai';
+const chai = require('chai');
+const expect = chai.expect;
+const spies = require('chai-spies');
+chai.use(spies);
 
+import domUpdates from '../src/domUpdates';
 import User from '../src/user.js';
+
+chai.spy.on(domUpdates, ['populateCards', 'searchByName', 'viewFavorites', 'filterRecipes', 'viewRecipesToCook'], () => {})
 
 let recipes = {
   recipeData: [
-{
-id: 595736,
-image: "https://spoonacular.com/recipeImages/595736-556x370.jpg",
-ingredients: [
-{
-id: 20081,
-quantity: {
-amount: 1.5,
-unit: "c"
-}
-},
-{
-id: 18372,
-quantity: {
-amount: 0.5,
-unit: "tsp"
-}
-},
-],
-name: "Loaded Chocolate Chip Pudding Cookie Cups",
-tags: [
-"antipasti",
-"starter",
-"snack",
-"appetizer",
-"antipasto",
-"hor d'oeuvre"
-]
-},
-{
-id: 678353,
-image: "https://spoonacular.com/recipeImages/678353-556x370.jpg",
-ingredients: [
-{
-id: 1009016,
-quantity: {
-amount: 1.5,
-unit: "cups"
-}
-},
-{
-id: 9003,
-quantity: {
-amount: 2,
-unit: ""
-}
-}
-],
-name: "Maple Dijon Apple Cider Grilled Pork Chops",
-tags: [
-"lunch",
-"main course",
-"main dish",
-"dinner"
-]
-}
-]
+    {
+    id: 595736,
+    image: "https://spoonacular.com/recipeImages/595736-556x370.jpg",
+    ingredients: [
+      {
+        id: 20081,
+        quantity: {
+          amount: 1.5,
+          unit: "c"
+        }
+      },
+      {
+        id: 18372,
+        quantity: {
+          amount: 0.5,
+          unit: "tsp"
+        }
+      },
+      ],
+      name: "Loaded Chocolate Chip Pudding Cookie Cups",
+      tags: [
+        "antipasti",
+        "starter",
+        "snack",
+        "appetizer",
+        "antipasto",
+        "hor d'oeuvre"
+      ]
+      },
+      {
+      id: 678353,
+      image: "https://spoonacular.com/recipeImages/678353-556x370.jpg",
+      ingredients: [
+      {
+        id: 1009016,
+        quantity: {
+          amount: 1.5,
+          unit: "cups"
+        }
+      },
+      {
+        id: 9003,
+        quantity: {
+          amount: 2,
+          unit: ""
+        }
+      }
+    ],
+    name: "Maple Dijon Apple Cider Grilled Pork Chops",
+    tags: [
+      "lunch",
+      "main course",
+      "main dish",
+      "dinner"
+    ]
+    }
+  ]
 }
 
 let user1
@@ -93,6 +99,11 @@ estimatedCostInCents: 582
 }]}
     );
   });
+
+  afterEach(() => {
+    chai.spy.restore()
+    chai.spy.on(domUpdates, ['populateCards', 'searchByName', 'viewFavorites', 'filterRecipes', 'viewRecipesToCook'], () => {})
+  })
 
   it('Should have a property of favoriteRecipes with a default value', () => {
     expect(user1.favoriteRecipes).to.eql([]);
@@ -177,13 +188,36 @@ estimatedCostInCents: 582
     user1.addRecipesToCook(recipes.recipeData[1]);
     expect(user1.findRecipeToCook('cheese')).to.eql([]);
   });
-  // it('Should be able to check ingredients in User/s pantry for a given recipe', () => {
-  //   console.log(recipeData[0].ingredients);
-  //   let recipeIngredients = recipeData[0].ingredients;
-  //   expect(user1.checkPantry(recipeIngredients)).to.eql('You have the ingredients!');
-  // });
-  //
-  // it('Should inform User if they lack required ingredients for a given recipe', () => {
-  //   expect(user1.checkPantry(recipeIngredients)).to.eql(missingIngredientsWithPrice);
-  // });
+
+  it ('should populate cards on startup', () => {
+    user1.populateCards()
+    expect(domUpdates.populateCards).to.have.been.called(1);
+    expect(domUpdates.populateCards).to.have.been.called.with(user1);
+  });
+
+  it ('should be able to filter the DOM on search', () => {
+    user1.searchByName()
+    expect(domUpdates.searchByName).to.have.been.called(1);
+    expect(domUpdates.searchByName).to.have.been.called.with(user1);
+  })
+
+  it ('should be able to filter the DOM by favorites', () => {
+    user1.viewFavorites()
+    expect(domUpdates.viewFavorites).to.have.been.called(1);
+    expect(domUpdates.viewFavorites).to.have.been.called.with(user1);
+  })
+
+  it ('should be able to filter the DOM by type', () => {
+    user1.filterRecipes(['antipasti'])
+    expect(domUpdates.filterRecipes).to.have.been.called(1);
+    expect(domUpdates.filterRecipes).to.have.been.called.with(user1);
+  })
+
+  it ('should be able to filter the DOM by recipes to cook', () => {
+    let event = {}
+    user1.viewRecipesToCook(event)
+    expect(domUpdates.viewRecipesToCook).to.have.been.called(1);
+    expect(domUpdates.viewRecipesToCook).to.have.been.called.with(user1);
+  })
+
 });
