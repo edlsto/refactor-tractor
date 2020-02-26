@@ -53,7 +53,7 @@ class Pantry {
         return recipeIngredient.quantity.amount > pantryItem.amount
       })
       let itemsNeeded = initialList.map(ingredient => {
-         this.contents.find(pantryItem => {
+        this.contents.find(pantryItem => {
           return pantryItem.ingredient === ingredient.id
         })
         const amountInPantry = this.contents.find(pantryIngredient => pantryIngredient.id === ingredient.id) || 0;
@@ -89,77 +89,70 @@ class Pantry {
     }, 0)
   }
 
-getIngredientById(recipe) {
-  console.log(this.cookMeal(recipe), 'fn-call')
-  return this.cookMeal(recipe).map((ingredient) => {
-    return ingredient.ingredientId
-  })
-}
-
-getIngredientModification(recipe) {
-  this.cookMeal(recipe).map((ingredient) => {
-    return ingredient.amountNeeded
-})
-}
-
-deleteIngredients(user, recipe) {
-  if (this.canCookMeal(recipe)) {
-  const ingredients = this.cookMeal(recipe);
-  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
-    console.log(user.id, ingredient.ingredientId, -Math.abs(ingredient.amountInRecipe),  'infoToPost')
-    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "userID": user.id,
-          "ingredientID": ingredient.ingredientId,
-          "ingredientModification": -Math.abs(ingredient.amountInRecipe)
-      })
-    }).then(response => response.json())
-    .then(json => console.log(json))
-    .catch(error => console.log(error.message))
-
-  })
-  console.log(deleteIngredientsFetchArray, '2')
-  Promise.all(deleteIngredientsFetchArray).then(promises => {
-      alert('Ingredients Deleted!');
-    }).catch(error => console.log(error.message)) ;
-  } else {
-    alert('You don\'t have enough ingredients to cook this meal!')
+  getIngredientById(recipe) {
+    return this.cookMeal(recipe).map((ingredient) => {
+      return ingredient.ingredientId
+    })
   }
-}
+
+  getIngredientModification(recipe) {
+    this.cookMeal(recipe).map((ingredient) => {
+      return ingredient.amountNeeded
+    })
+  }
+
+  deleteIngredients(user, recipe) {
+    if (this.canCookMeal(recipe)) {
+      const ingredients = this.cookMeal(recipe);
+      const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+        return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "userID": user.id,
+            "ingredientID": ingredient.ingredientId,
+            "ingredientModification": -Math.abs(ingredient.amountInRecipe)
+          })
+        }).then(response => response.json())
+          .then(json => console.log(json))
+          .catch(error => console.log(error.message))
+      })
+      Promise.all(deleteIngredientsFetchArray).then(promises => {
+        alert('Ingredients Deleted!');
+      }).catch(error => console.log(error.message));
+    } else {
+      alert('You don\'t have enough ingredients to cook this meal!')
+    }
+  }
 
   addIngredients(user, recipe) {
-  if (!this.canCookMeal(recipe)) {
-  const ingredients = this.getItemsNeeded(recipe);
-  const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
-    console.log(user.id, ingredient.id, ingredient.amountNeeded,  'infoToPostAdd')
-    return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "userID": user.id,
-          "ingredientID": ingredient.id,
-          "ingredientModification": ingredient.amountNeeded
+    if (!this.canCookMeal(recipe)) {
+      const ingredients = this.getItemsNeeded(recipe);
+      const deleteIngredientsFetchArray = ingredients.map((ingredient) => {
+      return fetch( 'https://fe-apps.herokuapp.com/api/v1/whats-cookin/1911/users/wcUsersData', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "userID": user.id,
+            "ingredientID": ingredient.id,
+            "ingredientModification": ingredient.amountNeeded
+          })
+        }).then(response => response.json())
+          .then(json => console.log(json))
+          .catch(error => console.log(error.message))
+
       })
-    }).then(response => response.json())
-    .then(json => console.log(json))
-    .catch(error => console.log(error.message))
-
-  })
-  Promise.all(deleteIngredientsFetchArray).then(promises => {
-      alert('Ingredients Added');
-    }).catch(error => console.log(error.message)) ;
-}
- else {
-  alert('You already have enough ingredients to cook this meal!')
-}
-}
-
+      Promise.all(deleteIngredientsFetchArray).then(promises => {
+        alert('Ingredients Added');
+      }).catch(error => console.log(error.message));
+    } else {
+      alert('You already have enough ingredients to cook this meal!')
+    }
+  }
 }
 
 
