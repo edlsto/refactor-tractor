@@ -11,9 +11,9 @@ class User {
     this.favoriteRecipes = [];
     this.recipesToCook = [];
     this.cookbook = new Cookbook(recipes.recipeData);
-	  this.cookbook.recipes = this.cookbook.recipes.map((recipe) => {
-	    return new Recipe(recipe, ingredients.ingredientsData)
-	  })
+    this.cookbook.recipes = this.cookbook.recipes.map((recipe) => {
+      return new Recipe(recipe, ingredients.ingredientsData)
+    })
   }
 
   addToFavorites(recipe) {
@@ -49,7 +49,7 @@ class User {
   addRecipesToCook(recipe) {
     if (!this.recipesToCook.includes(recipe)) {
       this.recipesToCook.push(recipe)
-    };
+    }
   }
 
   removeFromRecipesToCook(recipe) {
