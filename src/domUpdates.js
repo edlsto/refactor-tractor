@@ -37,7 +37,7 @@ getFavorites(user) {
 },
 
 	populateCards(user, recipes = user.cookbook.recipes) {
-		let cardArea = $('.all-cards');
+		let cardArea = $('.card-section');
 	  cardArea.html('');
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
@@ -84,6 +84,9 @@ getFavorites(user) {
 			results = user.findFavorites(headerSearch.val());
 		} else if (cardArea.hasClass('to-cook')) {
 			results = user.findRecipeToCook(headerSearch.val());
+		}
+		if(!headerSearch.val()){
+			this.populateCards(user);
 		}
 			this.populateCards(user, results)
 	},

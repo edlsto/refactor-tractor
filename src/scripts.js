@@ -49,6 +49,7 @@ function onStartup(recipes, ingredients, users) {
 		headerSearch.on('keyup', () => user.searchByName())
 		cardArea.on('click keypress', () => domUpdates.cardButtonConditionals(event, user));
 		homeButton.on('click', () => {
+			console.log('inthere')
 			favButton.html('View Favorites');
 			user.populateCards()
 		})
