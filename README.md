@@ -8,12 +8,7 @@ For Refractor Tractor we took an existing project that a previous student built 
 
 ## Technology Used
 
-Testing with Spies
-DOM Manipulation with jQuery
-Retrieving all data from an endpoint (Fetch)
-Sass
-Webpack
-ES6 Classes
+Testing with Spies, DOM Manipulation with jQuery, Retrieving all data from an endpoint (Fetch), Sass, Webpack, ES6 Classes.
 
 
 ## Team Members
