@@ -77,6 +77,24 @@ class User {
     });
   }
 
+  findRecipeByName(searchText) {
+    return this.cookbook.recipes.filter(recipe => {
+      let ingredientList = recipe.ingredients.map((ingredient) => {
+        return this.pantry.ingredientsData.find(ingredientDataPoint => {
+          return ingredientDataPoint.id === ingredient.id
+        }).name
+      })
+      let recipeName = recipe.name.split(' ');
+      recipeName = recipeName.map((word) => {
+        return word.slice(0, searchText.length).toLowerCase()
+      })
+      ingredientList = ingredientList.map((word) => {
+        return word.slice(0, searchText.length).toLowerCase()
+      })
+        return recipeName.includes(searchText.toLowerCase()) || ingredientList.includes(searchText.toLowerCase());
+    })
+  }
+
   populateCards() {
    domUpdates.populateCards(this)
   }

@@ -7,15 +7,15 @@ import $ from 'jquery';
 
 let domUpdates = {
 
-	updateRecipesToCook(event, user) {
+	updateRecipesToCook(target, user) {
 		let specificRecipe = user.cookbook.recipes.find(recipe => {
-			return recipe.id  === Number(event.target.id)
+			return recipe.id  === Number(target.id)
 		})
-		if (!$(event.target).hasClass('add-active')) {
-			$(event.target).addClass('add-active');
+		if (!$(target).hasClass('add-active')) {
+			$(target).addClass('add-active');
 			user.addRecipesToCook(specificRecipe);
-		} else if ($(event.target).hasClass('add-active')) {
-			$(event.target).removeClass('add-active');
+		} else if ($(target).hasClass('add-active')) {
+			$(target).removeClass('add-active');
 			user.removeFromRecipesToCook(specificRecipe);
 		}
 	},
@@ -37,7 +37,7 @@ getFavorites(user) {
 },
 
 	populateCards(user, recipes = user.cookbook.recipes) {
-		let cardArea = $('.all-cards');
+		let cardArea = $('.card-section');
 	  cardArea.html('');
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
@@ -67,7 +67,6 @@ getFavorites(user) {
 	  })
 	  this.getFavorites(user);
 		this.getRecipesToCook(user);
-
 	},
 
 
@@ -80,25 +79,27 @@ getFavorites(user) {
 	searchByName(user) {
 		let headerSearch = $('#search-input');
 		let cardArea = $('.all-cards');
-		let results = user.cookbook.findRecipeByName(headerSearch.val());
+		let results = user.findRecipeByName(headerSearch.val());
 		if (cardArea.hasClass('favorites')) {
 			results = user.findFavorites(headerSearch.val());
 		} else if (cardArea.hasClass('to-cook')) {
 			results = user.findRecipeToCook(headerSearch.val());
 		}
+		if(!headerSearch.val()){
+			this.populateCards(user);
+		}
 			this.populateCards(user, results)
 	},
 
 	closeRecipe(user) {
-		let cardArea = $('.all-cards');
-		this.populateCards(user)
+		let cardArea = $('.display-recipe');
 		cardArea.removeClass('display-recipe');
-		cardArea.addClass('all-cards')
+		cardArea.addClass('all-cards');
+		this.populateCards(user);
 	},
 
 	filterRecipes(user, selected) {
 		let cardArea = $('.all-cards');
-		console.log(selected)
 		let recipesToFilter = user.cookbook.recipes;
 		if(cardArea.hasClass('favorites')) {
 			recipesToFilter = user.favoriteRecipes
@@ -106,7 +107,6 @@ getFavorites(user) {
 			recipesToFilter = user.recipesToCook;
 		}
 		if(selected.length === 0) {
-			console.log(recipesToFilter)
 			this.populateCards(user, recipesToFilter)
 			return
 		}
@@ -133,7 +133,6 @@ getFavorites(user) {
 	    }
 	  })
 	  let recipeObject = new Recipe(newRecipeInfo, user.pantry.ingredientsData);
-		console.log(recipeObject)
 	  let cost = recipeObject.calculateCost()
 	  let costInDollars = (cost / 100).toFixed(2);
 		cardArea.add('all')
@@ -142,7 +141,7 @@ getFavorites(user) {
 		let cookability = user.pantry.canCookMeal(newRecipeInfo) ? 'can' : 'can\'t'
 
 	  cardArea.html(`
-			<div class="close-btn-wrapper"><div class="close-btn">Close recipe</div></div>
+			<div class="close-btn-wrapper"><button class="close-btn" role="exit-recipe" tabindex='1'>Close recipe</button></div>
 			<div class="alert"><div class="can-or-cant-cook"><h3>You ${cookability} cook this meal, based on what's on your pantry!</h3></div>
 		</div>
 
@@ -217,6 +216,7 @@ getFavorites(user) {
 
 
 	viewFavorites(user) {
+		let favButton = $('.view-favorites');
 		let cardArea = $('.all-cards');
 	  if (cardArea.hasClass('all')) {
 	    cardArea.removeClass('all')
@@ -250,13 +250,33 @@ getFavorites(user) {
 	  }
 	},
 	cardButtonConditionals(event, user) {
-		 if ($(event.target).hasClass('favorite')) {
-			this.favoriteCard(event, user);
-		} else if ($(event.target).hasClass('card-picture')) {
-			this.displayDirections(event, user);
-		} else if ($(event.target).hasClass('add')) {
-		this.updateRecipesToCook(event, user);
-	}
+		if(this.checkKeyboardEvent(event) === true) {
+			if ($(event.target).hasClass('favorite')) {
+			  this.favoriteCard(event, user);
+		  } else if ($(event.target).hasClass('card-picture')) {
+			  this.displayDirections(event, user);
+		  } else if ($(event.target).hasClass('add')) {
+		    this.updateRecipesToCook(event.target, user);
+	 		} else if ($(event.target).hasClass('add-button')) {
+				this.updateRecipesToCook($(event.target).children()[0], user);
+			}
+		}
+	},
+
+	checkKeyboardEvent(event) {
+		let validated
+		if(event.type === 'click') {
+			validated = true;
+		} else if(event.type === 'keypress') {
+			let code = event.charCode || event.keyCode;
+			if((code === 32) || (code === 13)) {
+				event.preventDefault();
+				validated = true;
+			}
+		} else {
+			validated = false;
+		}
+		return validated;
 	},
 
 	viewRecipesToCook(event, user) {

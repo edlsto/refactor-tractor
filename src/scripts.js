@@ -37,7 +37,7 @@ function getData(type) {
 }
 
 function onStartup(recipes, ingredients, users) {
-	  let userId = (Math.floor(Math.random() * 49) + 1)
+	  let userId = (Math.floor(Math.random() * 49) + 1);
 	  let newUser = users.find(user => {
 	    return user.id === Number(userId);
 	  });
@@ -47,12 +47,14 @@ function onStartup(recipes, ingredients, users) {
 
 		//Event listeners
 		headerSearch.on('keyup', () => user.searchByName())
-		cardArea.on('click', () => domUpdates.cardButtonConditionals(event, user));
+		cardArea.on('click keypress', () => domUpdates.cardButtonConditionals(event, user));
 		homeButton.on('click', () => {
+			console.log('inthere')
 			favButton.html('View Favorites');
 			user.populateCards()
 		})
 		favButton.on('click', () => user.viewFavorites());
+
 
     checklist.on('click', () => {
       let selected = [];
@@ -81,7 +83,4 @@ function onStartup(recipes, ingredients, users) {
 			}
 		});
 		viewToCookButton.on('click', () => user.viewRecipesToCook(event));
-    // let postButton.on('click', () => '')
-    // deleteButton.on('click', () => pantry.deleteIngredients(event, user));
-
 	}
