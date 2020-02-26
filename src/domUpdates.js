@@ -4,14 +4,6 @@ import User from './user';
 import Cookbook from './cookbook';
 import $ from 'jquery';
 
-let favButton = $('.view-favorites');
-let homeButton = $('.home')
-let cardArea = $('.all-cards');
-let headerSearch = $('#search-input');
-let searchText = headerSearch.val();
-let viewToCookButton = $('#view-to-cook-button');
-let postButton = $('.post-button');
-let deleteButton = $('.delete-button');
 
 let domUpdates = {
 
@@ -45,6 +37,7 @@ getFavorites(user) {
 },
 
 	populateCards(user, recipes = user.cookbook.recipes) {
+		let cardArea = $('.all-cards');
 	  cardArea.html('');
 		cardArea.removeClass('display-recipe');
 		cardArea.addClass('all-cards')
@@ -74,7 +67,6 @@ getFavorites(user) {
 	  })
 	  this.getFavorites(user);
 		this.getRecipesToCook(user);
-
 	},
 
 
@@ -85,7 +77,9 @@ getFavorites(user) {
 	},
 
 	searchByName(user) {
-		let results = user.cookbook.findRecipeByName(headerSearch.val());
+		let headerSearch = $('#search-input');
+		let cardArea = $('.all-cards');
+		let results = user.findRecipeByName(headerSearch.val());
 		if (cardArea.hasClass('favorites')) {
 			results = user.findFavorites(headerSearch.val());
 		} else if (cardArea.hasClass('to-cook')) {
@@ -95,13 +89,14 @@ getFavorites(user) {
 	},
 
 	closeRecipe(user) {
-		this.populateCards(user)
+		let cardArea = $('.display-recipe');
 		cardArea.removeClass('display-recipe');
-		cardArea.addClass('all-cards')
+		cardArea.addClass('all-cards');
+		this.populateCards(user);
 	},
 
 	filterRecipes(user, selected) {
-		console.log(selected)
+		let cardArea = $('.all-cards');
 		let recipesToFilter = user.cookbook.recipes;
 		if(cardArea.hasClass('favorites')) {
 			recipesToFilter = user.favoriteRecipes
@@ -109,7 +104,6 @@ getFavorites(user) {
 			recipesToFilter = user.recipesToCook;
 		}
 		if(selected.length === 0) {
-			console.log(recipesToFilter)
 			this.populateCards(user, recipesToFilter)
 			return
 		}
@@ -129,14 +123,13 @@ getFavorites(user) {
 	},
 
 	displayDirections(event, user) {
-		debugger
+		let cardArea = $('.all-cards');
 	  let newRecipeInfo = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id === Number(event.target.id)) {
 	      return recipe;
 	    }
 	  })
 	  let recipeObject = new Recipe(newRecipeInfo, user.pantry.ingredientsData);
-		console.log(recipeObject)
 	  let cost = recipeObject.calculateCost()
 	  let costInDollars = (cost / 100).toFixed(2);
 		cardArea.add('all')
@@ -201,6 +194,7 @@ getFavorites(user) {
 	},
 
  favoriteCard(event, user) {
+	 let favButton = $('.view-favorites');
 	  let specificRecipe = user.cookbook.recipes.find(recipe => {
 	    if (recipe.id  === Number(event.target.id)) {
 	      return recipe;
@@ -219,6 +213,8 @@ getFavorites(user) {
 
 
 	viewFavorites(user) {
+		let favButton = $('.view-favorites');
+		let cardArea = $('.all-cards');
 	  if (cardArea.hasClass('all')) {
 	    cardArea.removeClass('all')
 	  }
@@ -251,13 +247,10 @@ getFavorites(user) {
 	  }
 	},
 	cardButtonConditionals(event, user) {
-		console.log('cardButtonConditionals')
 		if(this.checkKeyboardEvent(event) === true) {
-					console.log('inside');
 			if ($(event.target).hasClass('favorite')) {
 			  this.favoriteCard(event, user);
 		  } else if ($(event.target).hasClass('card-picture')) {
-				debugger
 			  this.displayDirections(event, user);
 		  } else if ($(event.target).hasClass('add')) {
 		    this.updateRecipesToCook(event.target, user);
@@ -268,17 +261,14 @@ getFavorites(user) {
 	},
 
 	checkKeyboardEvent(event) {
-		debugger
 		let validated
 		if(event.type === 'click') {
 			validated = true;
-			// return true;
 		} else if(event.type === 'keypress') {
 			let code = event.charCode || event.keyCode;
 			if((code === 32) || (code === 13)) {
 				event.preventDefault();
 				validated = true;
-						debugger
 			}
 		} else {
 			validated = false;
@@ -287,6 +277,8 @@ getFavorites(user) {
 	},
 
 	viewRecipesToCook(event, user) {
+		let viewToCookButton = $('#view-to-cook-button');
+		let cardArea = $('.all-cards');
 	if (cardArea.hasClass('all')) {
     cardArea.removeClass('all')
   }

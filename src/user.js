@@ -1,6 +1,7 @@
 import Pantry from './pantry';
 import Cookbook from './cookbook';
 import Recipe from './recipe'
+import domUpdates from './domUpdates';
 
 class User {
   constructor(id, name, pantry, recipes, ingredients) {
@@ -66,16 +67,54 @@ class User {
   findRecipeToCook(strgToSrch) {
     strgToSrch = strgToSrch.toLowerCase();
     return this.recipesToCook.filter(recipe => {
-      console.log(recipe.name);
       return recipe.name.toLowerCase().includes(strgToSrch)
       || recipe.ingredients.find(ingredient => {
         let ingredientName = this.pantry.ingredientsData.find((element) => {
            return element.id === ingredient.id;
         });
         return ingredientName.name.includes(strgToSrch)
+      });
     });
-  });
- }
+  }
+
+  findRecipeByName(searchText) {
+    return this.cookbook.recipes.filter(recipe => {
+      let ingredientList = recipe.ingredients.map((ingredient) => {
+        return this.pantry.ingredientsData.find(ingredientDataPoint => {
+          return ingredientDataPoint.id === ingredient.id
+        }).name
+      })
+      let recipeName = recipe.name.split(' ');
+      recipeName = recipeName.map((word) => {
+        return word.slice(0, searchText.length).toLowerCase()
+      })
+      ingredientList = ingredientList.map((word) => {
+        return word.slice(0, searchText.length).toLowerCase()
+      })
+        return recipeName.includes(searchText.toLowerCase()) || ingredientList.includes(searchText.toLowerCase());
+    })
+  }
+
+  populateCards() {
+   domUpdates.populateCards(this)
+  }
+
+  searchByName() {
+   domUpdates.searchByName(this)
+  }
+
+  viewFavorites() {
+    domUpdates.viewFavorites(this)
+  }
+
+  filterRecipes(selected) {
+    domUpdates.filterRecipes(this, selected)
+  }
+
+  viewRecipesToCook(event) {
+    domUpdates.viewRecipesToCook(event, this)
+  }
+
 }
 
 
