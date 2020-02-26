@@ -26,7 +26,7 @@ ES6 Classes
 ![Main Page](https://user-images.githubusercontent.com/49801538/75312435-1fd89080-5817-11ea-9463-36180b337ab0.png)
 
 ## Recipe View:
-![Recipe](ihttps://user-images.githubusercontent.com/49801538/75312578-970e2480-5817-11ea-8d08-3dea38d1a47a.png)
+![Recipe](https://user-images.githubusercontent.com/49801538/75312578-970e2480-5817-11ea-8d08-3dea38d1a47a.png)
 
 ## Live View:
 ![Live](https://media.giphy.com/media/mBLO3pSdQ8qJU1o9YM/giphy.gif)
