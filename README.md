@@ -14,7 +14,7 @@ Testing with Spies, DOM Manipulation with jQuery, Retrieving all data from an en
 ## Team Members
 * [Mandy Alford](https://github.com/MandyAlford)
 * [Kevin Johnson](https://github.com/KevDev90)
-* [Ed Stoner](https://https://github.com/edlsto)
+* [Ed Stoner](https://github.com/edlsto)
 
 
 ## Welcome Screen:
